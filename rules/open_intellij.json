@@ -1,0 +1,14 @@
+{
+  "name": "Update",
+  "patterns": [
+    "open my project",
+    "open my idea"
+  ],
+  "actions": [
+    "bash ./open_intellij.sh"
+  ],
+  "runningDirectory": "~/OneDrive/Apps/Hermes/actions",
+  "passMessage": false,
+  "runAsAdmin": false,
+  "active": true
+}

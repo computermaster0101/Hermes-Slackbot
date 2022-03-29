@@ -1,0 +1,17 @@
+{
+  "name": "",
+  "patterns": [
+    ""
+  ],
+  "actions": [
+    ""
+  ],
+    "devices": [ 
+    "*",
+    "not currently used"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "runAsAdmin": false,
+  "active": false
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Update",
+  "patterns": [
+    "update",
+    "do updates",
+    "do upgrade"
+  ],
+  "actions": [
+    "bash ./update.sh"
+  ],
+  "runningDirectory": "~/OneDrive/Apps/Hermes/actions",
+  "passMessage": false,
+  "runAsAdmin": true,
+  "active": true
+}

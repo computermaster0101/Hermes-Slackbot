@@ -1,0 +1,15 @@
+{
+  "name": "Reboot",
+  "patterns": [
+    "restart",
+    "reboot",
+    "reset"
+  ],
+  "actions": [
+    "gnome-terminal -- bash ./reboot.sh"
+  ],
+  "runningDirectory": "~/OneDrive/Apps/Hermes/actions",
+  "passMessage": false,
+  "runAsAdmin": true,
+  "active": true
+}

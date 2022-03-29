@@ -1,0 +1,17 @@
+{
+  "name": "Ping Google",
+  "patterns": [
+    "ping [Gg]oogle",
+    "ping [Gg]oogle",
+    "pink [Gg]oogle",
+    "pin [Gg]oogle",
+    "ping [Gg]oogle.com"
+  ],
+  "actions": [
+    "ping google.com"
+  ],
+  "runningDirectory": "~/OneDrive/Apps/Hermes/actions",
+  "passMessage": false,
+  "runAsAdmin": false,
+  "active": true
+}

@@ -1,0 +1,16 @@
+
+{
+  "name": "Open Disney+",
+  "patterns": [
+    "[Oo]pen [Dd]isney [Pp]lus",
+    "[Ss]tart [Dd]isney [Pp]lus",
+    "[Ll]aunch [Dd]isney [Pp]lus"
+  ],
+  "actions": [
+    "gnome-www-browser disneyplus.com"
+  ],
+  "runningDirectory": "~/OneDrive/Apps/Hermes/actions",
+  "passMessage": false,
+  "runAsAdmin": false,
+  "active": true
+}
