@@ -1,0 +1,1 @@
+powershell.exe start-process ('https://google.com/search?q=%1')

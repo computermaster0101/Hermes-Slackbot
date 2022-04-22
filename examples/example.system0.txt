@@ -1,0 +1,1 @@
+{"device":"system0","message":"example message expected by the system","timestamp":"February 22, 2022 at 02:22AM"}
