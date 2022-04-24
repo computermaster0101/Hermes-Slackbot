@@ -4,6 +4,10 @@ system automation tool
 
 [this readme is a place holder with simple info]
 
+
+system{{NumberField}}.txt
+{"device":"system{{NumberField}}","message":"{{TextField}}","timestamp":"{{CreatedAt}}"}
+
 start hermes.py at system startup
 copy examples/example.hermes.json to ~/hermes.json
 define system variables
