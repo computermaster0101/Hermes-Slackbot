@@ -1,0 +1,15 @@
+{
+  "name": "Open Skype",
+  "patterns": [
+    "[Oo]pen [Ss]kype",
+    "[Ss]tart [Ss]kype",
+    "[Rr]un  [Ss]kype",
+    "[Ll]aunch  [Ss]kype"
+  ],
+  "actions": [
+    "skype.exe"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

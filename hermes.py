@@ -28,22 +28,27 @@ App Directory: {appDirectory}
 Rules Folder: {rulesDirectory}
 """)
 
-while not time.sleep(1):
-  if os.path.exists(messageFile):
-    newMsg=json.load(open(messageFile))
-    saveTo=os.path.join(historyDirectory,f"{time.strftime('%Y%m%d-%H%M%S')}.{systemName}.txt")
-    os.rename(messageFile,saveTo)         
+while not time.sleep(1): #Continuously run
+  if os.path.exists(messageFile): #if a message file exists
+    matched=False #the new message has not yet been matched
+    newMsg=json.load(open(messageFile)) #load the message file to a variable
+    saveTo=os.path.join(historyDirectory,f"{time.strftime('%Y%m%d-%H%M%S')}.{systemName}.txt") #identify the log location for the received message
+    os.rename(messageFile,saveTo) #move the message to the log location
     print(f"""
 Device: {newMsg.get("device")}
 Message: {newMsg.get("message")}
 Timestamp: {newMsg.get("timestamp")}""")
 
-    for file in os.listdir(rulesDirectory):
-      if file.endswith(".json"):
-        rule=json.load(open(os.path.join(rulesDirectory,file)))
-        for pattern in rule.get("patterns"):
-          if re.search(pattern, newMsg.get("message")):
-            matched=True
+    for file in os.listdir(rulesDirectory): #for every file in the rules directory
+      if file.endswith(".json"): #only process json files
+        rule=json.load(open(os.path.join(rulesDirectory,file))) #load te rule file
+        for pattern in rule.get("patterns"): #for every pattern
+          if re.search(pattern, newMsg.get("message")): #check if the message matches the pattern
+            matched=True #matched is true if the pattern/message matched
+            history=open(saveTo,"a") #open the history file and log the rule
+            history.write(f"""
+{rule}""")
+            history.close()
             print(f"""
 Rule: {rule.get("name")}
 Pattern: {pattern}
@@ -51,27 +56,30 @@ Run Directory: {rule.get("runningDirectory")}
 Run As Admin: {rule.get("runAsAdmin")}
 Pass Message: {rule.get("passMessage")}
 Active: {rule.get("active")}""")
-            
-            
-            if rule["active"]:
-              ruleRunningDir=os.path.expanduser(rule.get("runningDirectory"))
-              if os.path.exists(ruleRunningDir): os.chdir(ruleRunningDir)
-              for action in rule["actions"]:
-                action=os.path.expanduser(action)
-                if rule["passMessage"]:
+
+            if rule["active"]: #if the rule is active
+              ruleRunningDir=os.path.expanduser(rule.get("runningDirectory")) #identify the running directory
+              if os.path.exists(ruleRunningDir): os.chdir(ruleRunningDir) #if the running directory exists move to it
+              for action in rule["actions"]: #for every action
+                action=os.path.expanduser(action) #make sure any ~ are expanded to the users directory
+                if rule["passMessage"]: #if the message should be sent with the action update the command
                   cmd=(f"{action} \"{newMsg['message']}\"")
                 else:
                   cmd=action
                 print(f"execution action: {cmd}")
-                subprocess.Popen(cmd)
-              os.chdir(appDirectory)
-              history=open(saveTo,"a")
-              history.write(f"""
-{rule}""")
-              history.close()
-    if not matched: 
-      print(f"Undefined Pattern: {message}")
+                try: #try to execute the user defined subprocess
+                  subprocess.Popen(cmd)
+                except: #if the os could not process the command, log there was an error
+                  print(f"Execution Failed: {cmd}")
+                  history=open(saveTo,"a")
+                  history.write(f"""
+Command:"{cmd}" could not be exucuted by the OS""")
+                  history.close()
+              os.chdir(appDirectory) #move back to the application directory
+  
+    if not matched: #if the pattern/message does not match log it
+      print(f"Undefined Pattern: {newMsg['message']}")
       history=open(saveTo,"a")
       history.write(f"""
-Message:"{newMsg.message}" does not match any defined patterns""")
+Message:"{newMsg['message']}" does not match any defined patterns""")
       history.close()
