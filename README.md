@@ -6,7 +6,14 @@ system automation tool
 
 
 system{{NumberField}}.txt
+
+
 {"device":"system{{NumberField}}","message":"{{TextField}}","timestamp":"{{CreatedAt}}"}
+
+
+
+python version 3.0.4
+
 
 start hermes.py at system startup
 copy examples/example.hermes.json to ~/hermes.json
