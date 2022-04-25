@@ -1,10 +1,10 @@
 {
-  "name": "Open Google Search",
+  "name": "Received Message",
   "patterns": [
-    "[Ss]earch .*"
+    ".*"
   ],
   "actions": [
-    "searchGoogle.bat"
+    "powershell.exe -file receivedMessage.ps1"
   ],
   "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions",
   "passMessage": true,

@@ -4,7 +4,7 @@
     "[Ss]earch .*"
   ],
   "actions": [
-    "NewGoogleSearch.bat"
+    "searchGoogle.bat"
   ],
   "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions",
   "passMessage": true,

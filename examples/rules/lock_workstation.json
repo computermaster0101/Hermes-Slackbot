@@ -1,0 +1,13 @@
+{
+  "name": "Lock Workstation",
+  "patterns": [
+    "[Ll]ock my screens",
+	"[Ll]ock my computer"
+  ],
+  "actions": [
+    "rundll32.exe user32.dll LockWorkStation"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

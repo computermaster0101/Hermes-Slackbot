@@ -7,7 +7,7 @@
     "ping [Gg]oogle.com"
   ],
   "actions": [
-    "ping google.com -t"
+    "ping google.com"
   ],
   "runningDirectory": "",
   "passMessage": false,
