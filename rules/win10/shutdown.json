@@ -11,7 +11,7 @@
   "actions": [
     "python.exe shutdown.py"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\win10\\actions",
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
   "passMessage": false,
   "active": true
 }
