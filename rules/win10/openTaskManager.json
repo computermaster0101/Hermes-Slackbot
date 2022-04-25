@@ -3,7 +3,7 @@
   "patterns": [
     "[Oo]pen the task manager",
 	"[Tt]ask manager",
-    "[Ss]tart the task manager",
+    "[Ss]tart the task manager"
   ],
   "actions": [
     "taskmgr.exe"

@@ -54,7 +54,6 @@ Timestamp: {newMsg.get("timestamp")}""")
 Rule: {rule.get("name")}
 Pattern: {pattern}
 Run Directory: {rule.get("runningDirectory")}
-Run As Admin: {rule.get("runAsAdmin")}
 Pass Message: {rule.get("passMessage")}
 Active: {rule.get("active")}""")
 
