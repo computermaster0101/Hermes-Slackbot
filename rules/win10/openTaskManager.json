@@ -1,0 +1,14 @@
+{
+  "name": "Open Task Manager",
+  "patterns": [
+    "[Oo]pen the task manager",
+	"[Tt]ask manager",
+    "[Ss]tart the task manager",
+  ],
+  "actions": [
+    "taskmgr.exe"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

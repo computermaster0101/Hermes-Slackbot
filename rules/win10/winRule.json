@@ -6,7 +6,7 @@
   "actions": [
     "powershell.exe -file receivedMessage.ps1"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions",
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\win10\\actions",
   "passMessage": true,
   "active": true
 }

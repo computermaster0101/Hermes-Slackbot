@@ -6,7 +6,7 @@
   "actions": [
     "searchGoogle.bat"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions",
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\win10\\actions",
   "passMessage": true,
   "active": true
 }

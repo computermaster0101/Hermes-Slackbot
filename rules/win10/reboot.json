@@ -8,7 +8,7 @@
   "actions": [
     "powershell.exe -noprofile -executionpolicy bypass -file restart.ps1"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions",
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\win10\\actions",
   "passMessage": false,
   "active": true
 }
