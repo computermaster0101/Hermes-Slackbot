@@ -42,7 +42,17 @@ Timestamp: {newMsg.get("timestamp")}""")
 
       for file in os.listdir(rulesDirectory): #for every file in the rules directory
         if file.endswith(".json"): #only process json files
-          rule=json.load(open(os.path.join(rulesDirectory,file))) #load te rule file
+          try:
+            rule=json.load(open(os.path.join(rulesDirectory,file))) #load te rule file
+          except BaseException as err:
+            print(f"""
+Failed Loading Rule: {file}
+Error: {err}""")
+            history=open(saveTo,"a") #open the history file and log the rule
+            history.write(f"""
+Failed Loading Rule: {file}
+Error: {err}""")
+            history.close()
           for pattern in rule.get("patterns"): #for every pattern
             if re.search(pattern, newMsg.get("message")): #check if the message matches the pattern
               matched=True #matched is true if the pattern/message matched
