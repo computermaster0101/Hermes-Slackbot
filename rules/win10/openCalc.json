@@ -1,0 +1,15 @@
+{
+  "name": "Open Skype",
+  "patterns": [
+    "[Oo]pen calc.*",
+    "[Ss]tart calc.*",
+    "[Rr]un  calc.*",
+    "[Ll]aunch  calc.*"
+  ],
+  "actions": [
+    "calc"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}
