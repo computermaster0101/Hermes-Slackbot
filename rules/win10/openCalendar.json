@@ -1,0 +1,15 @@
+{
+  "name": "Open Calendar",
+  "patterns": [
+    "[Oo]pen calendar",
+    "[Ss]tart calendar",
+    "[Rr]un  calendar",
+    "[Ll]aunch calendar"
+  ],
+  "actions": [
+    "explorer.exe shell:AppsFolder\\microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.calendar"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}
