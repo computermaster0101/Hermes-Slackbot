@@ -1,0 +1,14 @@
+{
+  "name": "Update",
+  "patterns": [
+    "update",
+    "do updates",
+    "do upgrade"
+  ],
+  "actions": [
+    "sudo apt update && sudo apt upgrade -y"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

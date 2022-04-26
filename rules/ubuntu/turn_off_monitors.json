@@ -1,0 +1,26 @@
+{
+  "name": "Turn Off Monitors",
+  "patterns": [
+    "turn off monitors",
+    "turn off the monitors",
+    "turn off my monitors",
+    "turn the monitors off",
+    "turn my monitors off",
+    "turn off screens",
+    "turn off the screens",
+    "turn off my screens",
+    "turn the screens off",
+    "turn my screens off",
+    "turn off displays",
+    "turn off the displays",
+    "turn off my displays",
+    "turn the displays off",
+    "turn my displays off"
+  ],
+  "actions": [
+    "xset -display :0.0 dpms force off"
+  ],
+  "runningDirectory": "~/OneDrive/Apps/Hermes/actions",
+  "passMessage": false,
+  "active": true
+}

@@ -1,0 +1,14 @@
+{
+  "name": "Reboot",
+  "patterns": [
+    "restart",
+    "reboot",
+    "reset"
+  ],
+  "actions": [
+    "sudo reboot now"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

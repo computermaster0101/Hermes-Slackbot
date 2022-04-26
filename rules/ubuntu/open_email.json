@@ -1,0 +1,14 @@
+{
+  "name": "Open Email",
+  "patterns": [
+    "open email",
+    "open thunderbird",
+    "start tunderbird"
+  ],
+  "actions": [
+    "nohup /usr/bin/thunderbird &>/dev/null &"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}
