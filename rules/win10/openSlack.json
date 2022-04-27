@@ -9,7 +9,7 @@
   "actions": [
     "slack.exe"
   ],
-  "runningDirectory": "",
+  "runningDirectory": "~\\AppData\\Local\\slack",
   "passMessage": false,
   "active": true
 }
