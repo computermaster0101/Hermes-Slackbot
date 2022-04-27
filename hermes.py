@@ -3,6 +3,7 @@ import re
 import json
 import time
 import subprocess
+import shlex
 
 configFile=os.path.expanduser("~\\hermes.json")
 config=json.load(open(configFile))
@@ -78,7 +79,7 @@ Active: {rule.get("active")}""")
                     cmd=action
                   print(f"execution action: {cmd}")
                   try: #try to execute the user defined subprocess
-                    subprocess.Popen(cmd)
+                    subprocess.Popen(shlex.split(cmd))
                   except BaseException as err: #if the os could not process the command, log there was an error
                     print(f"""
 Execution Failed: {cmd}: 
