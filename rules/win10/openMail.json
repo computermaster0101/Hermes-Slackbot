@@ -7,9 +7,9 @@
     "[Ll]aunch email"
   ],
   "actions": [
-    "explorer.exe shell:AppsFolder\\microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.mail"
+    "openMail.bat"
   ],
-  "runningDirectory": "",
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
   "passMessage": false,
   "active": true
 }

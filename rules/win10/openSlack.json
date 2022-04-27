@@ -7,9 +7,9 @@
     "[Ll]aunch  [Ss]lack"
   ],
   "actions": [
-    "slack.exe"
+    "openSlack.bat"
   ],
-  "runningDirectory": "~\\AppData\\Local\\slack",
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
   "passMessage": false,
   "active": true
 }

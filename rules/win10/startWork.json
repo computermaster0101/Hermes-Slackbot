@@ -1,0 +1,19 @@
+{
+  "name": "Start Work",
+  "patterns": [
+    "start work",
+    "let's get to work",
+	"open my work apps",
+	"it's time for work"
+  ],
+  "actions": [
+    "explorer.exe shell:AppsFolder\\microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.calendar",
+    "explorer.exe shell:AppsFolder\\microsoft.windowscommunicationsapps_8wekyb3d8bbwe!microsoft.windowslive.mail",
+	"~\\AppData\\Local\\slack\\slack.exe",
+	"~\\AppData\\Local\\Vivaldi\\Application\\vivaldi.exe",
+	"~\\AppData\\Local\\authy\\Authy Desktop.exe"
+  ],
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
+  "passMessage": false,
+  "active": true
+}
