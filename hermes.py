@@ -5,7 +5,7 @@ import time
 import subprocess
 import shlex
 
-configFile=os.path.expanduser("~\\hermes.json")
+configFile=os.path.expanduser("~/hermes.json")
 config=json.load(open(configFile))
 
 for item in config:
