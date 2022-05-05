@@ -1,7 +1,7 @@
 # Hermes
 system automation tool
 
-python version 3.0.4
+python version 3.10.4
 
 
 [this readme is a place holder with simple info]
