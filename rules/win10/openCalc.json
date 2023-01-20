@@ -1,10 +1,7 @@
 {
-  "name": "Open Skype",
+  "name": "Open calc",
   "patterns": [
-    "[Oo]pen calc.*",
-    "[Ss]tart calc.*",
-    "[Rr]un  calc.*",
-    "[Ll]aunch  calc.*"
+	"^(open|start|run|launch) (the )?calc.*$"
   ],
   "actions": [
     "calc"
