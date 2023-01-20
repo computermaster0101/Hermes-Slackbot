@@ -1,9 +1,7 @@
 {
   "name": "Empty Recycle Bin",
   "patterns": [
-    "[Ee]mpty recycle bin",
-	"[Ee]mpty the recycle bin",
-	"[Ee]mpty my recycle bin"
+    "^[Ee]mpty (the )?(my )?recycle bin$"
   ],
   "actions": [
     "rundll32.exe -Command Clear-RecycleBin -Force"
