@@ -1,9 +1,7 @@
 {
   "name": "Open Task Manager",
   "patterns": [
-    "[Oo]pen the task manager",
-	"[Tt]ask manager",
-    "[Ss]tart the task manager"
+    "^(open|start|run|launch)( the)?( my)? task manager$"
   ],
   "actions": [
     "taskmgr.exe"

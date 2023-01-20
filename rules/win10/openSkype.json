@@ -1,10 +1,7 @@
 {
   "name": "Open Skype",
   "patterns": [
-    "[Oo]pen [Ss]kype",
-    "[Ss]tart [Ss]kype",
-    "[Rr]un  [Ss]kype",
-    "[Ll]aunch  [Ss]kype"
+    "^(open|start|run|launch)( the)?( my)? skype$"
   ],
   "actions": [
     "skype.exe"

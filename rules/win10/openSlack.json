@@ -1,10 +1,7 @@
 {
   "name": "Open Slack",
   "patterns": [
-    "[Oo]pen [Ss]lack",
-    "[Ss]tart [Ss]lack",
-    "[Rr]un  [Ss]lack",
-    "[Ll]aunch  [Ss]lack"
+    "^(open|start|run|launch)( the)?( my)? slack$"
   ],
   "actions": [
     "openSlack.bat"

@@ -1,12 +1,7 @@
 {
   "name": "Reboot",
   "patterns": [
-    "shutdown",
-    "shut down",
-    "shut off",
-    "turn off",
-    "power down",
-    "power off"
+    "^(shutdown|shut down|shut off|turn off|power down|power off)$"
   ],
   "actions": [
     "python.exe shutdown.py"
