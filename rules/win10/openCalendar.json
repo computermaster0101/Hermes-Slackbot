@@ -1,11 +1,7 @@
 {
   "name": "Open Calendar",
   "patterns": [
-    "[Oo]pen calendar",
-    "[Oo]pen my calendar",
-    "[Ss]tart calendar",
-    "[Rr]un  calendar",
-    "[Ll]aunch calendar"
+    "^(open|start|run|launch)( the)?( my)? calendar$"
   ],
  "actions": [
     "openCalendar.bat"
