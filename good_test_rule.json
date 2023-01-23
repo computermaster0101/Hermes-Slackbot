@@ -1,1 +1,0 @@
-{"name": "Hello World", "patterns": "^(hello|goodbye) world(!)?$"], "actions": ["echo Hello World!", "echo Goodbye World!"], "runningDirectory": "", "passMessage": false, "active": true}

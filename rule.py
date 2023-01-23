@@ -1,73 +1,34 @@
 import json
 
-
-def test_rule(test_file="temp_test_rule.json", write=True, delete=True):
-    test_file_data = {
-        "name": "Hello World",
-        "patterns": [
-            "^(hello|goodbye) world(!)?$"
-        ],
-        "actions": [
-            "echo Hello World!",
-            "echo Goodbye World!"
-        ],
-        "runningDirectory": "",
-        "passMessage": False,
-        "active": True
-    }
-    if write:
-        with open(test_file, "w") as outfile:
-            json.dump(test_file_data, outfile)
-
-    Rule(test_file)
-
-    if delete:
-        import os
-        os.remove(test_file)
-
+class MissingAttributeError(Exception):
+    pass
 
 class Rule:
     def __init__(self, file):
         try:
-            rule_data = json.load(open(file))  # load the rule file
-            self.name = rule_data['name']
-            self.patterns = rule_data['patterns']
-            self.actions = rule_data['actions']
-            self.runningDirectory = rule_data['runningDirectory']
-            self.passMessage = rule_data['passMessage']
-            self.active = rule_data['active']
-            output = str(self)
-        except FileNotFoundError as err:
-            output = '\n'.join([
-                f"Failed Loading Rule: {file}",
-                f"Error: {err}",
-                ""
-            ])
-        except AttributeError as err:
-            output = '\n'.join([
-                f"Failed Loading Rule: {file}",
-                f"Error: {err}",
-                ""
-            ])
-        finally:
-            print(output)
+            with open(file) as f:
+                rule_data = json.load(f)
+            self.name = rule_data.get('name')
+            self.patterns = rule_data.get('patterns')
+            self.actions = rule_data.get('actions')
+            self.runningDirectory = rule_data.get('runningDirectory')
+            self.passMessage = rule_data.get('passMessage', False)
+            self.active = rule_data.get('active', False)
+
+            if self.name is None:
+                raise MissingAttributeError(f"Error loading rule from {file}: Missing 'name' attribute.")
+            if self.patterns is None:
+                raise MissingAttributeError(f"Error loading rule from {file}: Missing 'patterns' attribute.")
+            if self.actions is None:
+                raise MissingAttributeError(f"Error loading rule from {file}: Missing 'actions' attribute.")
+        except FileNotFoundError as e:
+            raise FileNotFoundError(f"Error loading rule from {file}: {e}")
+        except json.decoder.JSONDecodeError as e:
+            raise json.decoder.JSONDecodeError(f"Error loading rule from {file}: {e}")
+        except Exception as e:
+            raise
 
     def __str__(self):
-        patterns = '\n'.join(self.patterns)
+        patterns = '\n '.join(self.patterns)
         actions = '\n'.join(self.actions)
-        return '\n'.join([
-            f"Name: {self.name}",
-            "",
-            f"Patterns: \n{patterns}",
-            "",
-            f"Actions: \n{actions}",
-            "",
-            f"Running Directory: {self.runningDirectory}",
-            f"Pass Message: {self.passMessage}",
-            f"Active: {self.active}",
-            ""
-        ])
-
-
-
-
+        return f"Name: {self.name}\nPatterns: \n{patterns}\nActions: \n{actions}\nRunning Directory: {self.runningDirectory}\nPass Message: {self.passMessage}\nActive: {self.active}"
