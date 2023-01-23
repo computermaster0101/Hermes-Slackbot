@@ -1,6 +1,42 @@
+"""
+This script defines a TestRule class that inherits from unittest.TestCase. The 
+class contains several test methods that test the functionality of the Rule 
+class defined in rule.py.
+
+The setUp method creates several JSON files that are used in the tests. One file 
+contains valid data for a rule, another contains data that is missing a required 
+attribute, another contains malformed JSON data, and the last one is a nonexistent 
+file.
+
+The test_good_rule method tests if the Rule class can handle a file with valid 
+data. This test should pass without raising any errors.
+
+The test_missing_attribute_rule method tests if the Rule class raises a
+ MissingAttributeError when a file is missing some of the necessary attributes. 
+ This test should pass when the exception is raised.
+
+The test_malformed_rule method tests if the Rule class raises a JSONDecodeError 
+when a file is malformed. This test should pass when the exception is raised.
+
+The test_nonexistent_rule method tests if the Rule class raises a FileNotFoundError 
+when a file does not exist. This test should pass when the exception is raised.
+
+Finally, the tearDown method deletes the test files that were created in the 
+setUp method.
+
+If the script is run directly, it calls unittest.main() which runs all the test 
+methods in the class and gives a summary of the test results.
+
+
+
+
+"""
+
 import unittest
 import json
 from rule import Rule, MissingAttributeError
+
+
 
 class TestRule(unittest.TestCase):
     def setUp(self):

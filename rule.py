@@ -1,3 +1,14 @@
+"""
+This script defines a Rule class that takes a file name as an argument in its 
+constructor. The file is expected to be a JSON file containing data that defines 
+the rule, including a name, patterns, actions, running directory, pass message, 
+and active status. The constructor reads the file, loads the JSON data, and 
+assigns the data to class variables. If any of the required attributes are missing, 
+a MissingattributeError is raised. If the file is not found or there is a JSON 
+decode error, the appropriate error is raised. The class also has a __str__ method, 
+which formats the class variables as a string for printing.
+"""
+
 import json
 
 class MissingAttributeError(Exception):
