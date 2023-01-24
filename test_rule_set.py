@@ -81,8 +81,6 @@ class TestRuleSet(unittest.TestCase):
         # Test if the class can iterate over each rule and print the key name and rule
         rule_set = RuleSet(self.test_directory)
         self.assertEqual(len(rule_set.rules), 2)
-        for file, rule in rule_set.rules.items():
-            print(f'File: {file}, Rule: {rule}')
 
     def test_load_multiple_rules(self):
         # Test if the class can load multiple rules into the dictionary
