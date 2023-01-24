@@ -16,15 +16,15 @@ class audio_listener:
 	def listen_for_keyword(self):
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
-			print("Listening for keyword '" + self.keyword + "'...")
+			print(f"\nListening for keyword '{self.keyword}'...")
 			audio = r.listen(source)
 		try:
 			text = r.recognize_google(audio)
 			if self.keyword in text:
-				print("Keyword '" + self.keyword + "' detected.")
-				self._remove_keyword(text)
+				print(f"Keyword '{self.keyword}' detected.\n")
+				self.remove_keyword(text)
 			else:
-				print("Keyword not detected, please try again.")
+				print(f"Keyword not detected, please try again.\n")
 		except sr.UnknownValueError:
 			print("Google Speech Recognition could not understand audio.")
 		except sr.RequestError as e:
@@ -41,5 +41,8 @@ class audio_listener:
 		self.message = {"device":self.system_name,"message": " ".join(outputWords),"timestamp":timestamp}
 	
 text = audio_listener()
+text.listen_for_keyword()
+print(text)
+print('')
 text.remove_keyword("computer this is my text")
 print(text)
