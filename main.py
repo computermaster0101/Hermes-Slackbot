@@ -1,32 +1,33 @@
-import os
 import time
+import threading
 
-from hermes import Hermes
-from message import Message
-from messageProcessor import MessageProcessor
+class Main:
+    def __init__(self):
+        self.message_processor = MessageProcessor()
+        self.message = Message()
+        self.audio_listener = AudioListener()
+        self.rules = RuleSet()
+        self.file_system_thread = threading.Thread(target=self.process_file_system_message)
+        self.audio_thread = threading.Thread(target=self.process_audio_message)
 
-testing = True
+    def process_file_system_message(self):
+        while True:
+            message = self.message.get_message_from_file_system()
+            if message:
+                self.message_processor.process_message(message, self.rules)
+            time.sleep(0.5)
 
+    def process_audio_message(self):
+        while True:
+            message = self.audio_listener.get_message_from_audio()
+            if message:
+                self.message_processor.process_message(message, self.rules)
+            time.sleep(0.5)
 
-def main():
-    my_hermes = Hermes()
-    print(my_hermes)
-
-    if my_hermes.check_for_message():
-        save_file = os.path.join(my_hermes.historyDirectory, f"{time.strftime('%Y%m%d-%H%M%S')}.{my_hermes.systemName}.txt")
-        try:
-            if testing:
-                import shutil
-                shutil.copy(my_hermes.messageFile, save_file)
-            else:
-                os.rename(my_hermes.messageFile, save_file)  # move the message to the log location
-            new_message = Message(save_file)
-            print(new_message)
-            message_processor = MessageProcessor(save_file=save_file, message=new_message, rules_directory=my_hermes.rulesDirectory)
-        except BaseException as error:
-            print("something unexpected happened")
-            print(error)
-
+    def run(self):
+        self.file_system_thread.start()
+        self.audio_thread.start()
 
 if __name__ == "__main__":
-    main()
+    main = Main()
+    main.run()
