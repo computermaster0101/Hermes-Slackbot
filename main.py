@@ -48,9 +48,9 @@ class Main:
     def process_audio_message(self):
         while True:
             audio_event = self.audio_listener.get_message_from_audio()
-            message = Message(message_object=audio_event)
-            ## todo: reload rules incase rules have changed
-            if message.text:
+            if audio_event:
+                message = Message(message_object=audio_event)
+                ## todo: reload rules incase rules have changed
                 self.message_processor.process_message(message, self.rules)
             time.sleep(0.5)
 
