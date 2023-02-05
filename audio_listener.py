@@ -39,10 +39,3 @@ class audio_listener:
 		elif outputWords[-1] == self.keyword:
 			del outputWords[-1]
 		self.message = {"device":self.system_name,"message": " ".join(outputWords),"timestamp":timestamp}
-	
-text = audio_listener()
-text.listen_for_keyword()
-print(text)
-print('')
-text.remove_keyword("computer this is my text")
-print(text)
