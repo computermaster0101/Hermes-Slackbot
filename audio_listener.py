@@ -13,7 +13,7 @@ class AudioListener:
 	def __str__(self):
 		return (f"system_name: {self.system_name}\nkeyword: {self.keyword}\nmessage: {json.dumps(self.message)}")
 
-	def listen_for_keyword(self):
+	def get_message_from_audio(self):
 		r = sr.Recognizer()
 		with sr.Microphone() as source:
 			print(f"\nListening for keyword '{self.keyword}'...")
