@@ -1,12 +1,17 @@
 import time
 import threading
+from message_processor import MessageProcessor
+from message import Message
+from audio_listener import AudioListener
+from rule_set import RuleSet
+
 
 class Main:
     def __init__(self):
-        self.message_processor = MessageProcessor()
         self.message = Message()
         self.audio_listener = AudioListener()
         self.rules = RuleSet()
+        self.message_processor = MessageProcessor(self.rules)
         self.file_system_thread = threading.Thread(target=self.process_file_system_message)
         self.audio_thread = threading.Thread(target=self.process_audio_message)
 
@@ -27,6 +32,7 @@ class Main:
     def run(self):
         self.file_system_thread.start()
         self.audio_thread.start()
+
 
 if __name__ == "__main__":
     main = Main()

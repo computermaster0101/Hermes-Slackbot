@@ -4,7 +4,7 @@ import os
 import json
 from datetime import datetime
 
-class audio_listener:
+class AudioListener:
 	def __init__(self,keyword="computer",system_name="computer"):
 		self.keyword=keyword
 		self.system_name=system_name

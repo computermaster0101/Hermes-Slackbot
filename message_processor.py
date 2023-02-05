@@ -1,7 +1,8 @@
 import re
 import subprocess
 
-class message_processor:
+
+class MessageProcessor:
     def __init__(self, rule_set):
         self.rule_set = rule_set
 
