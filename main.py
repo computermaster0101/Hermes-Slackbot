@@ -1,5 +1,3 @@
-import time
-import threading
 from message_processor import MessageProcessor
 from message import Message
 from audio_listener import AudioListener
@@ -55,9 +53,13 @@ class Main:
             time.sleep(0.5)
 
     def run(self):
-        print("commented out for testing")
-        # self.file_system_thread.start()
-        # self.audio_thread.start()
+        # print("commented out for testing")
+        self.file_system_thread.start()
+        self.audio_thread.start()
+        self.file_system_thread.join()
+        self.audio_thread.join()
+        while True:
+            time.sleep(1)
 
 
 if __name__ == "__main__":
