@@ -8,7 +8,7 @@ class MessageProcessor:
 
     def process_message(self, message, rules):
         try:
-            self.rule_set=rules
+            self.rule_set = rules
             for rule in self.rule_set.rules.values():
                 print(f"Processing rule: {rule}")
                 if not rule.active:
@@ -19,14 +19,17 @@ class MessageProcessor:
                     match = re.search(pattern, message.text)
                     if match:
                         print(f"Message '{message.text}' matches pattern '{pattern}'")
+                        # FIXME this logic is not correct
                         if not rule.passMessage:
                             print(f"Rule {rule} is set to not pass message. Returning.")
                             return
+                        # FIXME this logic is not correct
                         for action in rule.actions:
                             print(f"Running action '{action}' in directory '{rule.runningDirectory}'")
                             try:
                                 subprocess.run(action, cwd=rule.runningDirectory, shell=True, check=True)
                             except subprocess.CalledProcessError as e:
                                 print(f"Error running action {action}: {e}")
+                        # FIXME see the logic in the original script
         except Exception as e:
             print(f"An error occurred while processing message: {e}")
