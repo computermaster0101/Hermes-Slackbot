@@ -10,9 +10,12 @@ which formats the class variables as a string for printing.
 """
 
 import json
+import os
+
 
 class MissingAttributeError(Exception):
     pass
+
 
 class Rule:
     def __init__(self, file):
@@ -22,7 +25,8 @@ class Rule:
             self.name = rule_data.get('name')
             self.patterns = rule_data.get('patterns')
             self.actions = rule_data.get('actions')
-            self.runningDirectory = rule_data.get('runningDirectory')
+            self.actions = [os.path.expanduser(a) for a in self.actions]
+            self.runningDirectory = os.path.expanduser(rule_data.get('runningDirectory'))
             self.passMessage = rule_data.get('passMessage', False)
             self.active = rule_data.get('active', False)
 
