@@ -14,12 +14,12 @@ class MessageProcessor:
             match = False
             self.rule_set = rules
             output.append("")
-            output.append(f"Processing message: {message}")
+            output.append(f"Processing message '{message}' against rule dictionary")
             for rule in self.rule_set.rules.values():
-                output.append("")
-                output.append(f"Processing rule: {rule}")
+                # output.append("")
+                # output.append(f"Processing rule: {rule}")
                 for pattern in rule.patterns:
-                    output.append(f"Matching message '{message.text}' against pattern '{pattern}'")
+                    # output.append(f"Matching message '{message.text}' against pattern '{pattern}'")
                     if re.search(pattern, message.text):
                         match = True
                         output.append(f"Message '{message.text}' matches pattern '{pattern}'")
@@ -42,7 +42,6 @@ class MessageProcessor:
                         else:
                             output.append(f"Rule {rule} is inactive. Skipping.")
                             continue
-                    output.append("")
             if not match:  # if the pattern/message does not match log it
                 output.append(f"Undefined Pattern: {message.text}")
             return match, output

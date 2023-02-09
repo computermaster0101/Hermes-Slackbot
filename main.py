@@ -37,7 +37,7 @@ class Main:
             print(f"Error loading config: {e}")
 
     def wait_for_file_system_message(self):
-        print(f"Listening for message file {self.messageFile}")
+        print(f"Listen for message file {self.messageFile}")
         while True:
             if os.path.exists(self.messageFile):
                 message = Message(message_file=self.messageFile)
@@ -45,7 +45,7 @@ class Main:
             time.sleep(0.5)
 
     def wait_for_audio_message(self):
-        print(f"Listening for keyword file {self.keyword}")
+        print(f"Listen for keyword {self.keyword}")
         while True:
             audio_event = self.audio_listener.get_message_from_audio()
             if audio_event:
@@ -69,12 +69,11 @@ class Main:
             os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):
-        self.file_system_thread.start()
         # self.audio_thread.start()
-        self.file_system_thread.join()
         # self.audio_thread.join()
-        while True:
-            time.sleep(1)
+        # self.file_system_thread.start()
+        # self.file_system_thread.join()
+        self.wait_for_file_system_message()
 
 
 if __name__ == "__main__":
