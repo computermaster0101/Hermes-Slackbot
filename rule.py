@@ -26,7 +26,7 @@ class Rule:
             self.patterns = rule_data.get('patterns')
             self.actions = rule_data.get('actions')
             self.actions = [os.path.expanduser(a) for a in self.actions]
-            self.runningDirectory = os.path.expanduser(rule_data.get('runningDirectory'))
+            self.runningDirectory = './' if rule_data.get('runningDirectory') == "" else os.path.expanduser(rule_data.get('runningDirectory'))
             self.passMessage = rule_data.get('passMessage', False)
             self.active = rule_data.get('active', False)
 
@@ -44,6 +44,6 @@ class Rule:
             raise
 
     def __str__(self):
-        patterns = '\n '.join(self.patterns)
-        actions = '\n'.join(self.actions)
-        return f"Name: {self.name}\nPatterns: \n{patterns}\nActions: \n{actions}\nRunning Directory: {self.runningDirectory}\nPass Message: {self.passMessage}\nActive: {self.active}"
+        patterns = "\n".join(self.patterns)
+        actions = "\n".join(self.actions)
+        return f"Name: {self.name}\nPatterns: \n{patterns}\nActions: \n{actions}\nRunning Directory: {self.runningDirectory}\nPass Message: {self.passMessage}\nActive: {self.active} "

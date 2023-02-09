@@ -1,7 +1,5 @@
 import re
-import shlex
 import subprocess
-import os
 
 
 class MessageProcessor:
@@ -22,10 +20,8 @@ class MessageProcessor:
                     # output.append(f"Matching message '{message.text}' against pattern '{pattern}'")
                     if re.search(pattern, message.text):
                         match = True
-                        output.append(f"Message '{message.text}' matches pattern '{pattern}'")
+                        output.append(f"Message '{message.text}' matches pattern '{pattern}' in '{rule.name}'")
                         if rule.active:
-                            # return_path = os.getcwd()  # Store the current working directory in return_path
-                            # if os.path.exists(rule.runningDirectory): os.chdir(rule.runningDirectory)  # if the running directory exists move to it
                             for action in rule.actions:
                                 if rule.passMessage:  # if the message should be sent with the action update the command
                                     print(message.text)
@@ -35,10 +31,8 @@ class MessageProcessor:
                                 output.append(f"Running action '{action}' in directory '{rule.runningDirectory}'")
                                 try:
                                     subprocess.run(cmd, cwd=rule.runningDirectory, shell=True, check=True)
-                                    # subprocess.Popen(shlex.split(cmd))
                                 except subprocess.CalledProcessError as e:
                                     output.append(f"Error running action {action}: {e}")
-                            # os.chdir(return_path)
                         else:
                             output.append(f"Rule {rule} is inactive. Skipping.")
                             continue

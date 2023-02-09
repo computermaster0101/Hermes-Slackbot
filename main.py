@@ -59,13 +59,14 @@ class Main:
         history_file = os.path.join(self.historyDirectory, f"{time.strftime('%Y%m%d-%H%M%S')}_{self.systemName}.txt")
         with open(history_file, "w") as f:
             f.write(f"{message}\n")
-            print(f"{message}\n")
+
             for line in output:
-                f.write(line)
-                print(line)
+                f.write(f"{line}\n")
+                print(f"{line}\n")
         if env == "production":
             os.remove(self.messageFile)
         else:
+            os.remove(self.messageFile + ".bak")
             os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):

@@ -6,7 +6,7 @@
   "actions": [
     "calc"
   ],
-  "runningDirectory": "./",
+  "runningDirectory": "",
   "passMessage": false,
   "active": true
 }

@@ -9,9 +9,9 @@ the rules, the appropriate exception is raised.
 The class also has a __str__ method that formats the rules as a string for 
 printing, with the file name as the key, and the rule as the value.
 """
-import json
 import os
 from rule import Rule, MissingAttributeError
+
 
 class RuleSet:
     def __init__(self, directory):
@@ -30,4 +30,3 @@ class RuleSet:
                 self.rules[os.path.basename(directory)] = rule
             except MissingAttributeError as e:
                 print(f"Error loading rule from {directory}: {e}")
-

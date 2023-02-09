@@ -1,5 +1,6 @@
 import json
 
+
 class Message:
     def __init__(self, message_file=None, message_object=None):
         self.device = None
