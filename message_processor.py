@@ -20,7 +20,7 @@ class MessageProcessor:
                     # output.append(f"Matching message '{message.text}' against pattern '{pattern}'")
                     if re.search(pattern, message.text):
                         match = True
-                        output.append(f"Message '{message.text}' matches pattern '{pattern}' in '{rule.name}'")
+                        output.append(f"Message '{message.text}' matched pattern '{pattern}'\n\nRule:\n{rule}")
                         if rule.active:
                             for action in rule.actions:
                                 if rule.passMessage:  # if the message should be sent with the action update the command
@@ -34,7 +34,7 @@ class MessageProcessor:
                                 except subprocess.CalledProcessError as e:
                                     output.append(f"Error running action {action}: {e}")
                         else:
-                            output.append(f"Rule {rule} is inactive. Skipping.")
+                            output.append(f"Rule {rule.name} is inactive. Skipping.")
                             continue
             if not match:  # if the pattern/message does not match log it
                 output.append(f"Undefined Pattern: {message.text}")
