@@ -30,7 +30,7 @@ class MessageProcessor:
                                     cmd = action
                                 output.append(f"Running action '{action}' in directory '{rule.runningDirectory}'")
                                 try:
-                                    subprocess.run(cmd, cwd=rule.runningDirectory, shell=True, check=True)
+                                    subprocess.Popen(cmd, cwd=rule.runningDirectory, shell=True)
                                 except subprocess.CalledProcessError as e:
                                     output.append(f"Error running action {action}: {e}")
                         else:
