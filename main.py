@@ -70,9 +70,9 @@ class Main:
 
     def run(self):
         self.file_system_thread.start()
-        self.audio_thread.start()
+        # self.audio_thread.start()
         self.file_system_thread.join()
-        self.audio_thread.join()
+        # self.audio_thread.join()
         while True:
             time.sleep(1)
 
