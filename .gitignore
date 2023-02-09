@@ -1,5 +1,3 @@
 
-.idea/Hermes.iml
-.idea/misc.xml
-.idea/vcs.xml
-.idea/modules.xml
+.idea/*
+__pycache__/*
