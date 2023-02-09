@@ -10,6 +10,9 @@ class Message:
         elif message_object:
             self.get_message_from_object(message_object)
 
+    def __str__(self):
+        return json.dumps({"Device": self.device, "Text": self.text, "Timestamp": self.timestamp})
+
     def get_message_from_file_system(self, message_file):
         try:
             with open(message_file, 'r') as f:

@@ -58,12 +58,15 @@ class Main:
         match, output = self.message_processor.process_message(message, self.rules)
         history_file = os.path.join(self.historyDirectory, f"{time.strftime('%Y%m%d-%H%M%S')}_{self.systemName}.txt")
         with open(history_file, "w") as f:
-            f.write(f"{message}\n{output}")
+            f.write(f"{message}\n")
+            print(f"{message}\n")
+            for line in output:
+                f.write(line)
+                print(line)
         if env == "production":
             os.remove(self.messageFile)
         else:
             os.rename(self.messageFile, self.messageFile + ".bak")
-        print(*map(print, output))
 
     def run(self):
         self.file_system_thread.start()

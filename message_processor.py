@@ -13,7 +13,10 @@ class MessageProcessor:
             output = []
             match = False
             self.rule_set = rules
+            output.append("")
+            output.append(f"Processing message: {message}")
             for rule in self.rule_set.rules.values():
+                output.append("")
                 output.append(f"Processing rule: {rule}")
                 for pattern in rule.patterns:
                     output.append(f"Matching message '{message.text}' against pattern '{pattern}'")
@@ -25,6 +28,7 @@ class MessageProcessor:
                             # if os.path.exists(rule.runningDirectory): os.chdir(rule.runningDirectory)  # if the running directory exists move to it
                             for action in rule.actions:
                                 if rule.passMessage:  # if the message should be sent with the action update the command
+                                    print(message.text)
                                     cmd = f"{action} \"{message.text}\""
                                 else:
                                     cmd = action
@@ -38,6 +42,7 @@ class MessageProcessor:
                         else:
                             output.append(f"Rule {rule} is inactive. Skipping.")
                             continue
+                    output.append("")
             if not match:  # if the pattern/message does not match log it
                 output.append(f"Undefined Pattern: {message.text}")
             return match, output
