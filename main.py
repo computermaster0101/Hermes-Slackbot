@@ -29,12 +29,20 @@ class Main:
             self.audio_listener = AudioListener()
             self.rules = RuleSet(self.rulesDirectory)
             self.message_processor = MessageProcessor(self.rules)
+
+            self.user_input_thread = threading.Thread(target=self.wait_for_user_message)
             self.file_system_thread = threading.Thread(target=self.wait_for_file_system_message)
             self.audio_thread = threading.Thread(target=self.wait_for_audio_message)
         except FileNotFoundError as e:
             print(f"Error loading config from {self.configFile}: {e}")
         except Exception as e:
             print(f"Error loading config: {e}")
+
+    def wait_for_user_message(self):
+        while True:
+            user_input = input("Please enter a message: ")
+            message = Message(message_text=user_input)
+            self.process_message(message)
 
     def wait_for_file_system_message(self):
         print(f"Listen for message file {self.messageFile}")
@@ -47,9 +55,9 @@ class Main:
     def wait_for_audio_message(self):
         print(f"Listen for keyword {self.keyword}")
         while True:
-            audio_event = self.audio_listener.get_message_from_audio()
-            if audio_event:
-                message = Message(message_object=audio_event)
+            audio_input = self.audio_listener.get_message_from_audio()
+            if audio_input:
+                message = Message(message_text=audio_input)
                 self.process_message(message)
             time.sleep(0.5)
 
@@ -66,15 +74,21 @@ class Main:
         if env == "production":
             os.remove(self.messageFile)
         else:
-            os.remove(self.messageFile + ".bak")
-            os.rename(self.messageFile, self.messageFile + ".bak")
+            if os.path.exists(self.messageFile + ".bak"):
+                os.remove(self.messageFile + ".bak")
+                os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):
         # self.audio_thread.start()
         # self.audio_thread.join()
         # self.file_system_thread.start()
         # self.file_system_thread.join()
-        self.wait_for_file_system_message()
+        # self.user_input_thread.start()
+        # self.user_input_thread.join()
+
+        # self.wait_for_audio_message()
+        # self.wait_for_file_system_message()
+        self.wait_for_user_message()
 
 
 if __name__ == "__main__":

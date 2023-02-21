@@ -1,15 +1,16 @@
 import json
+from datetime import datetime
 
 
 class Message:
-    def __init__(self, message_file=None, message_object=None):
+    def __init__(self, message_file=None, message_text=None):
         self.device = None
         self.text = ""
         self.timestamp = None
         if message_file:
             self.get_message_from_file_system(message_file)
-        elif message_object:
-            self.get_message_from_object(message_object)
+        elif message_text:
+            self.get_message_from_text(message_text)
 
     def __str__(self):
         return json.dumps({"Device": self.device, "Text": self.text, "Timestamp": self.timestamp})
@@ -32,11 +33,13 @@ class Message:
         except Exception as e:
             raise Exception(f"Error: Could not load {message_file}: {e}.")
 
-    def get_message_from_object(self, message_object):
+    def get_message_from_text(self, message_text):
         try:
-            self.device = message_object.get("device", None)
-            self.text = message_object.get("message", "")
-            self.timestamp = message_object.get("timestamp", None)
+            now = datetime.now()
+            timestamp = now.strftime('"timestamp":"%B %d, %Y at %I:%M%p"')
+            self.device = "computer"
+            self.text = message_text
+            self.timestamp = timestamp
             if not all(val is not None for val in [self.device, self.timestamp]):
                 raise ValueError("Missing attributes in message object")
         except ValueError as e:
