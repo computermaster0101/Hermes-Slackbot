@@ -2,6 +2,7 @@
   "name": "Update",
   "patterns": [
     "update",
+	"upgrade",
     "do updates",
     "do upgrade"
   ],

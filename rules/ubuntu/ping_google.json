@@ -1,11 +1,7 @@
 {
   "name": "Ping Google",
   "patterns": [
-    "ping [Gg]oogle",
-    "ping [Gg]oogle",
-    "pink [Gg]oogle",
-    "pin [Gg]oogle",
-    "ping [Gg]oogle.com"
+    "(ping|pink|pin)\s[Gg]oogle(\.com)?"
   ],
   "actions": [
     "ping google.com"
