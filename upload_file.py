@@ -1,5 +1,6 @@
 import requests
 
+
 class FileUploader:
     def __init__(self, dropbox_access_token, onedrive_access_token, onedrive_root_folder_id, nextcloud_url, nextcloud_username, nextcloud_password):
         self.dropbox_url = "https://content.dropboxapi.com/2/files/upload"
@@ -41,22 +42,19 @@ class FileUploader:
         return response.text
 
 
+""" #this is the class i used with AWS Lambda to upload a file to dropbox
+import os
+import dropbox
 
 
-uploader = FileUploader(
-    dropbox_access_token="YOUR_DROPBOX_ACCESS_TOKEN",
-    onedrive_access_token="YOUR_ONEDRIVE_ACCESS_TOKEN",
-    onedrive_root_folder_id="YOUR_ONEDRIVE_ROOT_FOLDER_ID",
-    nextcloud_url="YOUR_NEXTCLOUD_URL",
-    nextcloud_username="YOUR_NEXTCLOUD_USERNAME",
-    nextcloud_password="YOUR_NEXTCLOUD_PASSWORD"
-)
+class FileUploader:
+    def __init__(self, dropbox_access_token):
+        self.dbx = dropbox.Dropbox(dropbox_access_token)
 
-# Upload a file to Dropbox
-uploader.dropbox("file.txt", "Hello, Dropbox!")
-
-# Upload a file to OneDrive
-uploader.onedrive("file.txt", "Hello, OneDrive!")
-
-# Upload a file to Nextcloud
-uploader.nextcloud("file.txt", "Hello, Nextcloud!")
+    def dropbox(self, file_name, content):
+        tmp_file_path = os.path.join('/tmp', file_name)
+        with open(tmp_file_path, 'w') as f:
+            f.write(content)
+        with open(tmp_file_path, 'rb') as f:
+            self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name
+"""

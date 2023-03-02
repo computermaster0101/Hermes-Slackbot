@@ -1,5 +1,6 @@
 import requests
 
+
 class MessageSender:
     def __init__(self, slack_webhook_url, matrix_access_token, matrix_room_id, skype_access_token, skype_conversation_id):
         self.slack_webhook_url = slack_webhook_url
@@ -43,9 +44,6 @@ class MessageSender:
         response = requests.post(url, headers=headers, json=data)
         response.raise_for_status()
         return response.text
-
-
-
 
 
 sender = MessageSender(
