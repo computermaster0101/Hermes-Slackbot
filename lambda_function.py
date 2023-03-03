@@ -32,17 +32,14 @@ def lambda_handler(event, context):
                 parsed_body = parse_qs(body)
                 text = parsed_body['text'][0]
                 print(f'Received / command: {text}')
-            elif json.loads(event['body'])['event']['text']:
-                method = 'at'
-                event_body = json.loads(event['body'])
-                text = event_body['event']['text']
-                team = event_body['event']['team']
-                channel = event_body['event']['channel']
-                respond = True
+#            elif json.loads(event['body'])['event']['text']:
+#                event_body = json.loads(event['body'])
+#                text = event_body['event']['text']
+#                channel = event_body['event']['channel']
+#                respond = True
             else:
                 event_body = json.loads(event['body'])
                 text = event_body['event']['blocks'][0]['elements'][0]['elements'][1]['text'].strip()
-                team = event_body['event']['team']
                 channel = event_body['event']['channel']
                 respond = True
 
