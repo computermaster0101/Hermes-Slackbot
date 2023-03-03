@@ -41,27 +41,3 @@ class FileUploader:
         response.raise_for_status()
         return response.text
 
-
-""" #this is the class i used with AWS Lambda to upload a file to dropbox
-import os
-import dropbox
-
-
-class FileUploader:
-    def __init__(self, dropbox_access_token):
-        self.dbx = dropbox.Dropbox(dropbox_access_token)
-    def dropbox(self, file_name, content):
-        tmp_file_path = os.path.join('/tmp', file_name)
-        with open(tmp_file_path, 'w') as f:
-            f.write(content)
-        with open(tmp_file_path, 'rb') as f:
-            try:
-                # self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name, mode=dropbox.files.WriteMode.overwrite)
-                self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name)
-                print(f"{file_name} uploaded successfully to Dropbox.")
-            except dropbox.exceptions.ApiError as e:
-                error_message = f"Failed to upload {file_name} to Dropbox\nDetails:\n{e}"
-                print(error_message)
-                raise Exception(error_message)
-
-"""
