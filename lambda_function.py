@@ -1,13 +1,25 @@
 import re
 import json
 import base64
-import urllib.parse
-import urllib.request
+
 from urllib.parse import parse_qs
 from datetime import datetime
+from send_message import MessageSender
+from upload_file import FileUploader
 
+# passed in as a query parameter for validating access to the funtion
 api_token = ""
+
+# required for uploading to nextcloud
+nextcloud_username = ""
+nextcloud_access_token = ""
+nextcloud_url = ""
+
+# dropbox_access_token expires every 4 hours
 dropbox_access_token = ""
+
+# required for sending messages as a slackbot
+slack_token = ""
 
 
 def lambda_handler(event, context):
@@ -32,16 +44,17 @@ def lambda_handler(event, context):
                 parsed_body = parse_qs(body)
                 text = parsed_body['text'][0]
                 print(f'Received / command: {text}')
-#            elif json.loads(event['body'])['event']['text']:
-#                event_body = json.loads(event['body'])
-#                text = event_body['event']['text']
-#                channel = event_body['event']['channel']
-#                respond = True
             else:
                 event_body = json.loads(event['body'])
                 text = event_body['event']['blocks'][0]['elements'][0]['elements'][1]['text'].strip()
+                team = event_body['event']['team']
                 channel = event_body['event']['channel']
                 respond = True
+                if not event.get('headers').get('x-slack-retry-num') is None:
+                    print("returning status code 202 to slackbot retry attempt")
+                    return {'statusCode': 200}
+
+            send_message = MessageSender(slack_token)
 
             match = re.match(r'system\s*(\d+)\s*(.*)', text)
             if match:
@@ -55,11 +68,12 @@ def lambda_handler(event, context):
                     'timestamp': timestamp
                 }
                 try:
-                    upload_file = FileUploader(dropbox_access_token=dropbox_access_token)
-                    upload_file.dropbox(file_name, json.dumps(message_object))
+                    upload_file = FileUploader(dropbox_access_token=None, nextcloud_username=nextcloud_username, nextcloud_access_token=nextcloud_access_token,
+                                               nextcloud_url=nextcloud_url)
+                    upload_file.upload(file_name, json.dumps(message_object))
                     output = f'Hello from Hermes!\nYour message is being promptly delivered!\n{json.dumps(message_object)}'
                     if respond:
-                        send_message_to_slack(output, channel)
+                        send_message.slack(output, channel)
                     else:
                         return {
                             'statusCode': 202,
@@ -67,8 +81,9 @@ def lambda_handler(event, context):
                         }
                 except Exception as e:
                     output = 'An internal server error occurred:\n' + str(e)
+                    print(output)
                     if respond:
-                        send_message_to_slack(output, channel)
+                        send_message.slack(output, channel)
                     else:
                         return {
                             'statusCode': 202,
@@ -77,7 +92,7 @@ def lambda_handler(event, context):
             else:
                 output = f'The pattern did not match!\ninvalid command:\n{text}'
                 if respond:
-                    send_message_to_slack(output, channel)
+                    send_message.slack(output, channel)
                 else:
                     return {
                         'statusCode': 202,
@@ -96,46 +111,3 @@ def lambda_handler(event, context):
             'statusCode': 500,
             'body': 'internal server error'
         }
-
-
-def send_message_to_slack(message, channel):
-    slack_url = "https://slack.com/api/chat.postMessage"
-    token = ""
-
-    data = urllib.parse.urlencode(
-        (
-            ("token", token),
-            ("channel", channel),
-            ("text", message)
-        )
-    )
-    data = data.encode("ascii")
-
-    request = urllib.request.Request(slack_url, data=data, method="POST")
-    request.add_header("Content-Type", "application/x-www-form-urlencoded")
-    x = urllib.request.urlopen(request).read()
-    print(x)
-    return {'statusCode': 202}
-
-
-import os
-import dropbox
-
-
-class FileUploader:
-    def __init__(self, dropbox_access_token):
-        self.dbx = dropbox.Dropbox(dropbox_access_token)
-
-    def dropbox(self, file_name, content):
-        tmp_file_path = os.path.join('/tmp', file_name)
-        with open(tmp_file_path, 'w') as f:
-            f.write(content)
-        with open(tmp_file_path, 'rb') as f:
-            try:
-                # self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name, mode=dropbox.files.WriteMode.overwrite)
-                self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name)
-                print(f"{file_name} uploaded successfully to Dropbox.")
-            except dropbox.exceptions.ApiError as e:
-                error_message = f"Failed to upload {file_name} to Dropbox\nDetails:\n{e}"
-                print(error_message)
-                raise Exception(error_message)

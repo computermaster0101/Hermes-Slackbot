@@ -1,43 +1,42 @@
+import os
+import dropbox
+from nextcloud import Client
 import requests
 
 
 class FileUploader:
-    def __init__(self, dropbox_access_token, onedrive_access_token, onedrive_root_folder_id, nextcloud_url, nextcloud_username, nextcloud_password):
-        self.dropbox_url = "https://content.dropboxapi.com/2/files/upload"
-        self.dropbox_access_token = dropbox_access_token
-        self.onedrive_url = "https://graph.microsoft.com/v1.0/drive/root:/"
-        self.onedrive_access_token = onedrive_access_token
-        self.onedrive_root_folder_id = onedrive_root_folder_id
-        self.nextcloud_url = nextcloud_url
-        self.nextcloud_username = nextcloud_username
-        self.nextcloud_password = nextcloud_password
 
-    def dropbox(self, file_name, content):
-        headers = {
-            "Authorization": f"Bearer {self.dropbox_access_token}",
-            "Content-Type": "application/octet-stream",
-            "Dropbox-API-Arg": f'{{"path": "/{file_name}","mode": "add","autorename": true,"mute": false}}'
-        }
-        response = requests.post(self.dropbox_url, headers=headers, data=content)
-        response.raise_for_status()
-        return response.json()
+    def __init__(self, dropbox_access_token=None, nextcloud_username=None, nextcloud_access_token=None, nextcloud_url=None):
+        if dropbox_access_token:
+            self.dbx = dropbox.Dropbox(dropbox_access_token)
+        if nextcloud_username and nextcloud_access_token and nextcloud_url:
+            session = requests.Session()
+            session.verify = False  # for self-signed certificates
+            self.nc = Client(url=nextcloud_url)
+            self.nc.login(nextcloud_username, nextcloud_access_token)
 
-    def onedrive(self, file_name, content):
-        url = f"{self.onedrive_url}{self.onedrive_root_folder_id}/{file_name}:/content"
-        headers = {
-            "Authorization": f"Bearer {self.onedrive_access_token}",
-            "Content-Type": "text/plain"
-        }
-        response = requests.put(url, headers=headers, data=content)
-        response.raise_for_status()
-        return response.json()
-
-    def nextcloud(self, file_name, content):
-        url = f"{self.nextcloud_url}/remote.php/dav/files/{self.nextcloud_username}/{file_name}"
-        headers = {
-            "Content-Type": "text/plain"
-        }
-        response = requests.put(url, headers=headers, data=content, auth=(self.nextcloud_username, self.nextcloud_password))
-        response.raise_for_status()
-        return response.text
-
+    def upload(self, file_name, content):
+        if hasattr(self, 'dbx'):
+            tmp_file_path = os.path.join('/tmp', file_name)
+            with open(tmp_file_path, 'w') as f:
+                f.write(content)
+            with open(tmp_file_path, 'rb') as f:
+                try:
+                    self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name)
+                    print(f"{file_name} uploaded successfully to Dropbox.")
+                except dropbox.exceptions.ApiError as e:
+                    error_message = f"Failed to upload {file_name} to Dropbox\nDetails:\n{e}"
+                    print(error_message)
+                    raise Exception(error_message)
+        if hasattr(self, 'nc'):
+            tmp_file_path = os.path.join('/tmp', file_name)
+            with open(tmp_file_path, 'w') as f:
+                f.write(content)
+            remote_path = '/Apps/Commands/' + file_name
+            try:
+                self.nc.put_file(remote_path, tmp_file_path)
+                print(f"{file_name} uploaded successfully to Nextcloud.")
+            except Exception as e:
+                error_message = f"Failed to upload {file_name} to Nextcloud\nDetails:\n{e}"
+                print(error_message)
+                raise Exception(error_message)
