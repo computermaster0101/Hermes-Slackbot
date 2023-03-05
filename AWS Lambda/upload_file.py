@@ -22,7 +22,7 @@ class FileUploader:
                 f.write(content)
             with open(tmp_file_path, 'rb') as f:
                 try:
-                    self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name)
+                    self.dbx.files_upload(f.read(), '/Apps/Commands/' + file_name, mode=dropbox.files.WriteMode.overwrite)
                     print(f"{file_name} uploaded successfully to Dropbox.")
                 except dropbox.exceptions.ApiError as e:
                     error_message = f"Failed to upload {file_name} to Dropbox\nDetails:\n{e}"
