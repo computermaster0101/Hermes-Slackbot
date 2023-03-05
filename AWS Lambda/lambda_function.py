@@ -43,6 +43,13 @@ def lambda_handler(event, context):
     try:
         api_key = event['queryStringParameters']['apikey']
         if api_key in tokens.values():
+            # todo after validation, a second lambda should be used.
+            #  If a completion takes longer then 3 seconds return
+            #  doesnt happen fast enough. In the case of @ commands
+            #  this is addressed by responding with a 200 to the
+            #  slackbot however / commands end up with operation
+            #  timed out even though the operation completes
+
             print('The api token has been validated!')
             respond = False
             if api_key == tokens['slash_api_key']:
@@ -56,7 +63,7 @@ def lambda_handler(event, context):
                 channel = event_body['event']['channel']
                 respond = True
                 if not event.get('headers').get('x-slack-retry-num') is None:
-                    print("returning status code 202 to slackbot retry attempt")
+                    print("returning status code 200 to slackbot retry attempt")
                     return {'statusCode': 200}
             else:
                 print("Not Yet Implimented")
