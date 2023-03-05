@@ -22,4 +22,3 @@ class MessageSender:
         request.add_header("Content-Type", "application/x-www-form-urlencoded")
         x = urllib.request.urlopen(request).read()
         print(x)
-        return {'statusCode': 202}

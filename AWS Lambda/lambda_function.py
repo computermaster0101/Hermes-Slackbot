@@ -1,38 +1,16 @@
-import re
 import json
-import base64
+import boto3
 
-from urllib.parse import parse_qs
-from datetime import datetime
-from send_message import MessageSender
-from upload_file import FileUploader
+from hermes_gatekeeper import HermesGatekeeper
 
-# passed in as a query parameter for validating access to the funtion
-# passed in as a query parameter for validating access to the funtion.
-# different sources can have different tokens to help identify origin.
-tokens = {
-    "at_api_key": None,
-    "slash_api_key": None,
-    "dialogflow_api_key": None
-}
-
-# required for uploading to nextcloud
-nextcloud_username = None
-nextcloud_access_token = None
-nextcloud_url = None
-
-# dropbox_access_token expires every 4 hours
-dropbox_access_token = None
-
-# required for sending messages as a slackbot
-slack_token = None
+my_config_file = 'config_file.json'
 
 
 def lambda_handler(event, context):
-    print('An event occurred!')
-    print(event)
+    print(f'An event occurred!\n{event}')
 
     """
+    # this is only needed when validating slackbot for @ commands (event subscription)
     body = json.loads(event['body'])
     challenge = body['challenge']
     return {
@@ -40,92 +18,98 @@ def lambda_handler(event, context):
         'body': challenge
     }
     """
-    try:
-        api_key = event['queryStringParameters']['apikey']
-        if api_key in tokens.values():
-            # todo after validation, a second lambda should be used.
-            #  If a completion takes longer then 3 seconds return
-            #  doesnt happen fast enough. In the case of @ commands
-            #  this is addressed by responding with a 200 to the
-            #  slackbot however / commands end up with operation
-            #  timed out even though the operation completes
 
-            print('The api token has been validated!')
-            respond = False
-            if api_key == tokens['slash_api_key']:
-                body = base64.b64decode(event['body']).decode('utf-8')
-                parsed_body = parse_qs(body)
-                text = parsed_body['text'][0]
-                print(f'Received / command: {text}')
-            elif api_key == tokens['at_api_key']:
-                event_body = json.loads(event['body'])
-                text = event_body['event']['blocks'][0]['elements'][0]['elements'][1]['text'].strip()
-                channel = event_body['event']['channel']
-                respond = True
-                if not event.get('headers').get('x-slack-retry-num') is None:
-                    print("returning status code 200 to slackbot retry attempt")
-                    return {'statusCode': 200}
-            else:
-                print("Not Yet Implimented")
-                return {
-                    'statusCode': 200,
-                    'body': "Not Yet Implimented"
-                }
+    gatekeeper = HermesGatekeeper(my_config_file)
+    gatekeeper.response.append('Hello from The Gatekeeper!')
+    if not event.get('headers').get('x-slack-retry-num') is None:
+        gatekeeper.response.append('You sent a duplicate message!')
+        print('returning status 200 to slackbot retry attempt')
+        return {'statusCode':200}
 
-            send_message = MessageSender(slack_token)
+    # try:
+    if gatekeeper.is_key_valid(event['queryStringParameters']['apikey']):
+        gatekeeper.response.append('The api token has been validated!')
 
-            match = re.match(r'system\s*(\d+)\s*(.*)', text)
-            if match:
-                device = f'system{match.group(1)}'
-                message = match.group(2)
-                timestamp = datetime.now().strftime('%B %d, %Y at %I:%M%p')
-                file_name = f'{device}.txt'
-                message_object = {
-                    'device': device,
-                    'message': message,
-                    'timestamp': timestamp
-                }
-                try:
-                    upload_file = FileUploader(dropbox_access_token=None, nextcloud_username=nextcloud_username, nextcloud_access_token=nextcloud_access_token,
-                                               nextcloud_url=nextcloud_url)
-                    upload_file.upload(file_name, json.dumps(message_object))
-                    output = f'Hello from Hermes!\nYour message is being promptly delivered!\n{json.dumps(message_object)}'
-                    if respond:
-                        send_message.slack(output, channel)
-                    else:
-                        return {
-                            'statusCode': 202,
-                            'body': f'{output}'
-                        }
-                except Exception as e:
-                    output = 'An internal server error occurred:\n' + str(e)
-                    print(output)
-                    if respond:
-                        send_message.slack(output, channel)
-                    else:
-                        return {
-                            'statusCode': 202,
-                            'body': f'{output}'
-                        }
-            else:
-                output = f'The pattern did not match!\ninvalid command:\n{text}'
-                if respond:
-                    send_message.slack(output, channel)
-                else:
-                    return {
-                        'statusCode': 202,
-                        'body': f'{output}'
-                    }
+        if event['queryStringParameters']['apikey'] == gatekeeper.tokens['hermes_relay_key']:
+            gatekeeper.response.append('Welcome Hermes!')
+            hermes_dispatch(event)
+
+        elif event['queryStringParameters']['apikey'] == gatekeeper.tokens['slack_at_api_key']:
+            gatekeeper.response.append('Welcome Slackbot Commander!')
+            open_the_gate(gatekeeper, event)
+            print('sending 200')
+            return {'statusCode': 200}
+
+        elif event['queryStringParameters']['apikey'] == gatekeeper.tokens['slack_slash_api_key']:
+            gatekeeper.response.append('Welcome Slackbot Slasher!')
+            open_the_gate(gatekeeper, event)
+            output = gatekeeper.get_output_string()
+            print('sending 200')
+            return {'statusCode': 200, 'body': f'OK {output}'}
+
+        elif event['queryStringParameters']['apikey'] == gatekeeper.tokens['dialogflow_api_key']:
+            gatekeeper.response.append('Welcome Dialogflow!')
+            gatekeeper.response.append('This has not been implimented')
+            output = gatekeeper.get_output_string()
+            return {'statusCode': 202, 'body': f'{output}'}
+
         else:
-            print('The api token is invalid!')
-            return {
-                'statusCode': 403,
-                'body': 'forbidden'
-            }
+            gatekeeper.response.append('The key is invalid!')
+            gatekeeper.send_message()
+            output = gatekeeper.get_output_string()
+            return {'statusCode': 403, 'body': f'forbidden\n{output}'}
+"""
     except Exception as e:
         print('Unidentified internal server error!')
         print(e)
         return {
             'statusCode': 500,
             'body': 'internal server error'
+        }
+"""
+
+def open_the_gate(gatekeeper, event):
+    event['queryStringParameters']['tmpkey'] = event['queryStringParameters']['apikey']
+    event['queryStringParameters']['apikey'] = gatekeeper.tokens['hermes_relay_key']
+    gatekeeper.send_message()
+    output = gatekeeper.get_output_string()
+
+    lambda_client = boto3.client('lambda')
+    lambda_client.invoke(
+        FunctionName='Hermes_Gatekeeper',
+        InvocationType='Event',
+        Payload=json.dumps(event)
+    )
+
+
+def hermes_dispatch(event):
+    event['queryStringParameters']['apikey'] = event['queryStringParameters']['tmpkey']
+    hermes = HermesGatekeeper(my_config_file)
+    hermes.get_data_from_event(event)
+    if hermes.is_pattern_valid():
+        hermes.get_message_object()
+        try:
+            hermes.file_upload()
+            hermes.response.append(f'Your message is being promptly delivered!\n{json.dumps(hermes.message_object)}')
+            hermes.send_message()
+            output = hermes.get_output_string()
+            return {
+                'statusCode': 200,
+                'body': f'{output}'
+            }
+        except Exception as e:
+            hermes.response.append('An internal server error occurred:\n' + str(e))
+            hermes.send_message()
+            output = hermes.get_output_string()
+            return {
+                'statusCode': 200,
+                'body': f'{output}'
+            }
+    else:
+        hermes.response.append(f'The pattern did not match!\ninvalid command:\n{hermes.text}')
+        hermes.send_message()
+        output = hermes.get_output_string()
+        return {
+            'statusCode': 200,
+            'body': f'{output}'
         }

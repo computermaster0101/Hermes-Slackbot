@@ -3,7 +3,6 @@ import dropbox
 from nextcloud import Client
 import requests
 
-
 class FileUploader:
 
     def __init__(self, dropbox_access_token=None, nextcloud_username=None, nextcloud_access_token=None, nextcloud_url=None):
@@ -11,7 +10,7 @@ class FileUploader:
             self.dbx = dropbox.Dropbox(dropbox_access_token)
         if nextcloud_username and nextcloud_access_token and nextcloud_url:
             session = requests.Session()
-            session.verify = False  # for self-signed certificates
+            session.verify = False # for self-signed certificates
             self.nc = Client(url=nextcloud_url)
             self.nc.login(nextcloud_username, nextcloud_access_token)
 
