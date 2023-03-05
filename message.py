@@ -7,6 +7,7 @@ class Message:
         self.device = None
         self.text = ""
         self.timestamp = None
+        self.channel = None
         if message_file:
             self.get_message_from_file_system(message_file)
         elif message_text:
@@ -22,6 +23,7 @@ class Message:
             self.device = new_message.get("device", None)
             self.text = new_message.get("message", "")
             self.timestamp = new_message.get("timestamp", None)
+            self.channel = new_message.get("channel", None)
             if not all(val is not None for val in [self.device, self.timestamp]):
                 raise ValueError("Missing attributes in message file")
         except FileNotFoundError:

@@ -83,7 +83,8 @@ class HermesGatekeeper:
         self.message_object = {
             'device': device,
             'message': message,
-            'timestamp': timestamp
+            'timestamp': timestamp,
+            'channel': self.destination_slack_channel
         }
 
     def file_upload(self):

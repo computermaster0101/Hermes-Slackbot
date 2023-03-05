@@ -2,6 +2,7 @@ from message_processor import MessageProcessor
 from message import Message
 from audio_listener import AudioListener
 from rule_set import RuleSet
+from send_message import MessageSender
 
 import os
 import json
@@ -25,6 +26,11 @@ class Main:
             self.msgDir = config["msgDir"]
             self.messageFile = os.path.join(self.msgDir, f"{self.systemName}.txt")
             self.keyword = config["keyword"]
+
+            if config["slack_token"]:
+                self.slack_token = config["slack_token"]
+                self.default_slack_channel = config["default_slack_channel"]
+                self.message_sender = MessageSender(self.slack_token)
 
             self.audio_listener = AudioListener()
             self.rules = RuleSet(self.rulesDirectory)
@@ -68,9 +74,17 @@ class Main:
         with open(history_file, "w") as f:
             f.write(f"{message}\n")
 
+            output_string = ""
             for line in output:
-                f.write(f"{line}\n")
-                print(f"{line}\n")
+                output_string = f'{output_string}\n{line}'
+            print(output_string)
+
+            if hasattr(self, 'message_sender'):
+                if message.channel:
+                    self.message_sender.slack(output_string, message.channel)
+                else:
+                    self.message_sender.slack(output_string, self.default_slack_channel)
+
         if env == "production":
             os.remove(self.messageFile)
         else:
