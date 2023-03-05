@@ -38,7 +38,7 @@ class MessageProcessor:
                             continue
             if not match:  # if the pattern/message does not match log it
                 output.append(f"Undefined Pattern: {message.text}")
-            return match, output
+            return output
 
         except Exception as e:
             print(f"An error occurred while processing message: {e}")

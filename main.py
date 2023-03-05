@@ -69,7 +69,11 @@ class Main:
 
     def process_message(self, message):
         self.rules = RuleSet(self.rulesDirectory)
-        match, output = self.message_processor.process_message(message, self.rules)
+        if message.device == self.systemName:
+            output = self.message_processor.process_message(message, self.rules)
+        else:
+            output = ["Invalid Message!"]
+
         history_file = os.path.join(self.historyDirectory, f"{time.strftime('%Y%m%d-%H%M%S')}_{self.systemName}.txt")
         with open(history_file, "w") as f:
             f.write(f"{message}\n")
