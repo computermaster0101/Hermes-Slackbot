@@ -1,0 +1,12 @@
+{
+  "name": "Open Google Search",
+  "patterns": [
+    "^(open|launch|start)?( the)? chatgpt.*$"
+  ],
+  "actions": [
+    "start https://chat.openai.com/chat"
+  ],
+  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
+  "passMessage": true,
+  "active": true
+}
