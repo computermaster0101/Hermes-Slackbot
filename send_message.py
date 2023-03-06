@@ -21,4 +21,4 @@ class MessageSender:
         request = urllib.request.Request(self.slack_url, data=data, method="POST")
         request.add_header("Content-Type", "application/x-www-form-urlencoded")
         x = urllib.request.urlopen(request).read()
-        print(x)
+        #print(x)

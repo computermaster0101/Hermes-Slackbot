@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class Message:
-    def __init__(self, message_file=None, message_text=None):
-        self.device = None
+    def __init__(self, message_file=None, message_text=None, device=None):
+        self.device = device
         self.text = ""
         self.timestamp = None
         self.channel = None
@@ -14,7 +14,7 @@ class Message:
             self.get_message_from_text(message_text)
 
     def __str__(self):
-        return json.dumps({"Device": self.device, "Text": self.text, "Timestamp": self.timestamp})
+        return json.dumps({"Device": self.device, "Text": self.text, "Timestamp": self.timestamp, "channel": self.channel})
 
     def get_message_from_file_system(self, message_file):
         try:
@@ -39,7 +39,7 @@ class Message:
         try:
             now = datetime.now()
             timestamp = now.strftime('"timestamp":"%B %d, %Y at %I:%M%p"')
-            self.device = "computer"
+            self.device = self.device
             self.text = message_text
             self.timestamp = timestamp
             if not all(val is not None for val in [self.device, self.timestamp]):

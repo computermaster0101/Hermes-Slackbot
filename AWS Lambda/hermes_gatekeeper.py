@@ -79,12 +79,15 @@ class HermesGatekeeper:
         device = f'system{self.match.group(1)}'
         message = self.match.group(2)
         timestamp = datetime.now().strftime('%B %d, %Y at %I:%M%p')
+        channel = self.destination_slack_channel
+        if channel is None:
+            channel = self.default_slack_channel
         self.file_name = f'{device}.txt'
         self.message_object = {
             'device': device,
             'message': message,
             'timestamp': timestamp,
-            'channel': self.destination_slack_channel
+            'channel': channel
         }
 
     def file_upload(self):

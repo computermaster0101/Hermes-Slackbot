@@ -9,7 +9,7 @@ import json
 import threading
 import time
 
-env = "development"
+env = "production"
 
 
 class Main:
@@ -47,7 +47,8 @@ class Main:
     def wait_for_user_message(self):
         while True:
             user_input = input("Please enter a message: ")
-            message = Message(message_text=user_input)
+            message = Message(message_text=user_input, device=self.systemName)
+            print(message)
             self.process_message(message)
 
     def wait_for_file_system_message(self):
@@ -63,7 +64,7 @@ class Main:
         while True:
             audio_input = self.audio_listener.get_message_from_audio()
             if audio_input:
-                message = Message(message_text=audio_input)
+                message = Message(message_text=audio_input, device=self.systemName)
                 self.process_message(message)
             time.sleep(0.5)
 
@@ -75,19 +76,19 @@ class Main:
             output = ["Invalid Message!"]
 
         history_file = os.path.join(self.historyDirectory, f"{time.strftime('%Y%m%d-%H%M%S')}_{self.systemName}.txt")
+
+        output_string = ""
+        for line in output:
+            output_string = f'{output_string}\n{line}'
+
+        print(output_string)
         with open(history_file, "w") as f:
-            f.write(f"{message}\n")
-
-            output_string = ""
-            for line in output:
-                output_string = f'{output_string}\n{line}'
-            print(output_string)
-
-            if hasattr(self, 'message_sender'):
-                if message.channel:
-                    self.message_sender.slack(output_string, message.channel)
-                else:
-                    self.message_sender.slack(output_string, self.default_slack_channel)
+            f.write(f"{message}\n{output_string}")
+        if hasattr(self, 'message_sender'):
+            if message.channel:
+                self.message_sender.slack(output_string, message.channel)
+            else:
+                self.message_sender.slack(output_string, self.default_slack_channel)
 
         if env == "production":
             os.remove(self.messageFile)
@@ -105,8 +106,8 @@ class Main:
         # self.user_input_thread.join()
 
         # self.wait_for_audio_message()
-        # self.wait_for_file_system_message()
-        self.wait_for_user_message()
+        self.wait_for_file_system_message()
+        # self.wait_for_user_message()
 
 
 if __name__ == "__main__":

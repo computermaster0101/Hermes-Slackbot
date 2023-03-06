@@ -23,7 +23,7 @@ def lambda_handler(event, context):
     gatekeeper.response.append('Hello from The Gatekeeper!')
     if not event.get('headers').get('x-slack-retry-num') is None:
         gatekeeper.response.append('You sent a duplicate message!')
-        print('returning status 200 to slackbot retry attempt')
+        print('reutrning status 200 to slackbot retry attempt')
         return {'statusCode':200}
 
     # try:
