@@ -102,9 +102,9 @@ class Main:
         self.file_system_thread.start()
         time.sleep(3)
         print("")
-        self.audio_thread.start()
-        time.sleep(3)
-        print("")
+        # self.audio_thread.start()
+        # time.sleep(3)
+        # print("")
         self.user_input_thread.start()
         self.user_input_thread.join()
 
@@ -114,5 +114,5 @@ class Main:
 
 
 if __name__ == "__main__":
-    main = Main("~\\hermes.json")
+    main = Main("~/hermes.json")
     main.run()
