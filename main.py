@@ -32,7 +32,7 @@ class Main:
                 self.default_slack_channel = config["default_slack_channel"]
                 self.message_sender = MessageSender(self.slack_token)
 
-            self.audio_listener = AudioListener()
+            self.audio_listener = AudioListener(keyword=self.keyword)
             self.rules = RuleSet(self.rulesDirectory)
             self.message_processor = MessageProcessor(self.rules)
 
@@ -47,7 +47,7 @@ class Main:
     def wait_for_user_message(self):
         while True:
             user_input = input("Please enter a message: ")
-            message = Message(message_text=user_input, device=self.systemName)
+            message = Message(message_text=user_input, message_file=None, device=self.systemName)
             print(message)
             self.process_message(message)
 
@@ -55,8 +55,8 @@ class Main:
         print(f"Listen for message file {self.messageFile}")
         while True:
             if os.path.exists(self.messageFile):
-                message = Message(message_file=self.messageFile)
-                self.process_message(message)
+                message = Message(message_file=self.messageFile, message_text=None)
+                self.process_message(message, file=True)
             time.sleep(0.5)
 
     def wait_for_audio_message(self):
@@ -64,11 +64,11 @@ class Main:
         while True:
             audio_input = self.audio_listener.get_message_from_audio()
             if audio_input:
-                message = Message(message_text=audio_input, device=self.systemName)
+                message = Message(message_text=audio_input, message_file=None, device=self.systemName)
                 self.process_message(message)
             time.sleep(0.5)
 
-    def process_message(self, message):
+    def process_message(self, message, file=False):
         self.rules = RuleSet(self.rulesDirectory)
         if message.device == self.systemName:
             output = self.message_processor.process_message(message, self.rules)
@@ -91,22 +91,25 @@ class Main:
                 self.message_sender.slack(output_string, self.default_slack_channel)
 
         if env == "production":
-            os.remove(self.messageFile)
+            if file:
+                os.remove(self.messageFile)
         else:
             if os.path.exists(self.messageFile + ".bak"):
                 os.remove(self.messageFile + ".bak")
                 os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):
-        # self.audio_thread.start()
-        # self.audio_thread.join()
-        # self.file_system_thread.start()
-        # self.file_system_thread.join()
-        # self.user_input_thread.start()
-        # self.user_input_thread.join()
+        self.file_system_thread.start()
+        time.sleep(3)
+        print("")
+        self.audio_thread.start()
+        time.sleep(3)
+        print("")
+        self.user_input_thread.start()
+        self.user_input_thread.join()
 
         # self.wait_for_audio_message()
-        self.wait_for_file_system_message()
+        # self.wait_for_file_system_message()
         # self.wait_for_user_message()
 
 
