@@ -9,5 +9,6 @@
   "dropbox_access_token": null,
   "slack_token": null,
   "default_slack_channel": null,
-  "device_types": ["system", "device", "server", "computer", "rpi"]
+  "device_types": ["system", "device", "server", "computer", "rpi"],
+  "prefixes": [" ", "tell", "have"]
 }
