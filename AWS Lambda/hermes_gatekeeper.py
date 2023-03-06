@@ -32,6 +32,7 @@ class HermesGatekeeper:
             self.slack_token = config["slack_token"]
             self.default_slack_channel = config["default_slack_channel"]
             self.device_types = config["device_types"]
+            self.prefixes=config["prefixes"]
 
             self.file_uploader = FileUploader(dropbox_access_token=self.dropbox_access_token,
                                               nextcloud_username=self.nextcloud_username,
@@ -52,7 +53,11 @@ class HermesGatekeeper:
             return False
 
     def is_pattern_valid(self):
-        self.match = re.match(rf'({"|".join(self.device_types)})\s*(\d+)\s*(.*)', self.text)
+        for prefix in self.prefixes:
+            if self.text.lower().startswith(prefix):
+                self.text = re.sub(f'^{prefix}\s*', '', self.text, flags=re.IGNORECASE)
+                break
+        self.match = re.match(rf'({"|".join(self.device_types)})\s*(\d+)\s*(.*)', self.text, re.IGNORECASE)
         if self.match:
             return True
         else:
