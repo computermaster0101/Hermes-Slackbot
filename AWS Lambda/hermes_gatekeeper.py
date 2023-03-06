@@ -31,6 +31,7 @@ class HermesGatekeeper:
             self.dropbox_access_token = config["dropbox_access_token"]
             self.slack_token = config["slack_token"]
             self.default_slack_channel = config["default_slack_channel"]
+            self.device_types = config["device_types"]
 
             self.file_uploader = FileUploader(dropbox_access_token=self.dropbox_access_token,
                                               nextcloud_username=self.nextcloud_username,
@@ -51,7 +52,7 @@ class HermesGatekeeper:
             return False
 
     def is_pattern_valid(self):
-        self.match = re.match(r'system\s*(\d+)\s*(.*)', self.text)
+        self.match = re.match(rf'({"|".join(self.device_types)})\s*(\d+)\s*(.*)', self.text)
         if self.match:
             return True
         else:
@@ -76,8 +77,8 @@ class HermesGatekeeper:
             self.response.append("Not Yet Implemented")
 
     def get_message_object(self):
-        device = f'system{self.match.group(1)}'
-        message = self.match.group(2)
+        device = f'{self.match.group(1)}{self.match.group(2)}'
+        message = self.match.group(3)
         timestamp = datetime.now().strftime('%B %d, %Y at %I:%M%p')
         channel = self.destination_slack_channel
         if channel is None:
