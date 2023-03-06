@@ -6,7 +6,7 @@
   "actions": [
     "openSlack.bat"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",,
   "passMessage": false,
   "active": true
 }

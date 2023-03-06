@@ -6,7 +6,7 @@
   "actions": [
     "start https://chat.openai.com/chat"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
+  "runningDirectory": "",
   "passMessage": true,
   "active": true
 }
