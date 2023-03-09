@@ -33,38 +33,40 @@ def lambda_handler(event, context):
     }
     """
 
-    key = event['queryStringParameters']['apikey']
-
-    if event['isBase64Encoded']:
-        slack.target_channel = parse_qs(base64.b64decode(event['body']).decode('utf-8'))['channel_id'][0]
-    elif not event['isBase64Encoded']:
-        slack.target_channel = json.loads(event['body'])['event']['channel']
-    else:
-        slack.target_channel = None
-
-    if not event.get('headers').get('x-slack-retry-num') is None:
-        slack.message.append('Hermes was turned away! A duplicate message was received!')
-        slack.send()
-        print('returning status 200 to slackbot retry attempt')
-        return_response(200)
-    elif gatekeeper.is_key_valid(key):
-        if key == gatekeeper.keys['slack_event_key']:
-            slack.message.append('Your key has been validated! Welcome Slackbot Commander!')
-            gatekeeper.open_the_gate(event)
-            print('returning status 200 to slackbot event command')
-            return_response(200)
-        elif key == gatekeeper.keys['slack_command_key']:
-            slack.message.append('Your key has been validated! Welcome Slackbot Slasher!')
-            gatekeeper.open_the_gate(event)
-            print('returning status 200 to slackbot slash command')
-            return {'statusCode': 200, 'body': 'OK'}
-        elif key == gatekeeper.keys['hermes_key']:
-            slack.message.append('The Gatekeeper has opened the gate for dispatching Hermes with your message!')
-            hermes_dispatch(gatekeeper.close_the_gate(event))
+    try:
+        if event['isBase64Encoded']:
+            slack.target_channel = parse_qs(base64.b64decode(event['body']).decode('utf-8'))['channel_id'][0]
+        elif not event['isBase64Encoded']:
+            slack.target_channel = json.loads(event['body'])['event']['channel']
         else:
-            slack.message.append('The key is not valid!')
-            slack.send()
-            return_response(403, "forbidden")
+            slack.target_channel = None
+    except Exception as e:
+        print('could not set slack target channel')
+        slack.target_channel = None
+    finally:
+        key = event['queryStringParameters']['apikey']
+
+        if not event.get('headers').get('x-slack-retry-num') is None:
+            print('returning status 200 to slackbot retry attempt')
+            return_response(200)
+        elif gatekeeper.is_key_valid(key):
+            if key == gatekeeper.keys['slack_event_key']:
+                slack.message.append('Your key has been validated! Welcome Slackbot Commander!')
+                gatekeeper.open_the_gate(event)
+                print('returning status 200 to slackbot event command')
+                return_response(200)
+            elif key == gatekeeper.keys['slack_command_key']:
+                slack.message.append('Your key has been validated! Welcome Slackbot Slasher!')
+                gatekeeper.open_the_gate(event)
+                print('returning status 200 to slackbot slash command')
+                return {'statusCode': 200, 'body': 'OK'}
+            elif key == gatekeeper.keys['hermes_key']:
+                slack.message.append('The Gatekeeper has opened the gate for dispatching Hermes with your message!')
+                hermes_dispatch(gatekeeper.close_the_gate(event))
+            else:
+                slack.message.append('The key is not valid!')
+                slack.send()
+                return_response(403, "forbidden")
 
 
 def hermes_dispatch(event):
