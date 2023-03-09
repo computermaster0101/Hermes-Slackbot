@@ -18,10 +18,7 @@ class Slack:
     def send(self):
         print("Slack.send")
         channel = self.target_channel if self.target_channel else self.default_channel
-        output = ""
-        for line in self.message:
-            output = f"{output}\n{line}"
-        #output = "\n".join(self.message)
+        output = "\n".join(self.message)
 
         data = urllib.parse.urlencode(
             (
@@ -38,5 +35,5 @@ class Slack:
         print(f"Slack.send:\n{x}")
 
     def clear(self):
-        print(f"{self.__class__.__name__}.{__name__}")
+        print("Slack.clear")
         self.message = [""]

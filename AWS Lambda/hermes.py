@@ -29,7 +29,7 @@ class Hermes:
         parsed_body = parse_qs(body)
         self.text = parsed_body['text'][0]
         message = f'Received / command: {self.text}'
-        target_channel = None
+        target_channel = parsed_body['channel_id']
         return message, target_channel
 
     def is_pattern_valid(self):
