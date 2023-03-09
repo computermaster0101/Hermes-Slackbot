@@ -3,18 +3,21 @@ import dropbox
 from nextcloud import Client
 import requests
 
+
 class FileUploader:
 
-    def __init__(self, dropbox_access_token=None, nextcloud_username=None, nextcloud_access_token=None, nextcloud_url=None):
-        if dropbox_access_token:
-            self.dbx = dropbox.Dropbox(dropbox_access_token)
-        if nextcloud_username and nextcloud_access_token and nextcloud_url:
+    def __init__(self, dbox=None,nextcloud=None):
+        print("FileUploader.__init__")
+        if dbox:
+            self.dbx = dropbox.Dropbox(dbox['token'])
+        if nextcloud:
             session = requests.Session()
-            session.verify = False # for self-signed certificates
-            self.nc = Client(url=nextcloud_url)
-            self.nc.login(nextcloud_username, nextcloud_access_token)
+            session.verify = False  # for self-signed certificates
+            self.nc = Client(url=nextcloud['url'])
+            self.nc.login(nextcloud['username'], nextcloud['token'])
 
     def upload(self, file_name, content):
+        print("FileUploader.upload")
         if hasattr(self, 'dbx'):
             tmp_file_path = os.path.join('/tmp', file_name)
             with open(tmp_file_path, 'w') as f:

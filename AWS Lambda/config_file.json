@@ -2,7 +2,6 @@
   "hermes_relay_key": null,
   "slack_at_api_key": null,
   "slack_slash_api_key": null,
-  "dialogflow_api_key": null,
   "nextcloud_username": null,
   "nextcloud_access_token": null,
   "nextcloud_url": null,
