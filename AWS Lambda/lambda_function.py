@@ -43,7 +43,7 @@ def lambda_handler(event, context):
         slack.target_channel = None
 
     if not event.get('headers').get('x-slack-retry-num') is None:
-        slack.message.append('A duplicate message was received!')
+        slack.message.append('Hermes was turned away! A duplicate message was received!')
         slack.send()
         print('returning status 200 to slackbot retry attempt')
         return_response(200)
