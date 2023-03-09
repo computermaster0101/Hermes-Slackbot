@@ -83,17 +83,14 @@ def hermes_dispatch(event):
             nextcloud.upload(hermes.file_name, json.dumps(hermes.message_object))
             slack.message.append(f'Hermes has promptly delivered your message!\n{json.dumps(hermes.message_object)}')
             slack.send()
-            body = '\n'.join(slack.message)
             return_response(200, '/n'.join(slack.message))
         except Exception as e:
             slack.message.append(f'Hermes wandered off somewhere and your message never made it!\n{str(e)}')
             slack.send()
-            body = '\n'.join(slack.message)
             return_response(200, '/n'.join(slack.message))
     else:
         slack.message.append(f'Hermes has return with an undeliverable message because of a misunderstanding!\ninvalid command:\n{hermes.text}')
         slack.send()
-        body = '\n'.join(slack.message)
         return_response(200, '/n'.join(slack.message))
 
 
