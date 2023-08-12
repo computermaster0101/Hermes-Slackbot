@@ -39,10 +39,11 @@ def lambda_handler(event, context):
         elif not event['isBase64Encoded']:
             slack.target_channel = json.loads(event['body'])['event']['channel']
         else:
-            slack.target_channel = None
+            slack.target_channel = slack.default_channel
     except Exception as e:
         print('could not set slack target channel')
-        slack.target_channel = None
+        slack.target_channel = slack.default_channel
+        print('using default channel')
     finally:
         key = event['queryStringParameters']['apikey']
 
@@ -59,6 +60,11 @@ def lambda_handler(event, context):
                 slack.message.append('Your key has been validated! Welcome Slackbot Slasher!')
                 gatekeeper.open_the_gate(event)
                 print('returning status 200 to slackbot slash command')
+                return {'statusCode': 200, 'body': 'OK'}
+            elif key == gatekeeper.keys['api_command_key']:
+                slack.message.append('Your key has been validated! Welcome API Commander!')
+                gatekeeper.open_the_gate(event)
+                print('returning status 200 to api command')
                 return {'statusCode': 200, 'body': 'OK'}
             elif key == gatekeeper.keys['hermes_key']:
                 slack.message.append('The Gatekeeper has opened the gate for dispatching Hermes with your message!')
@@ -77,6 +83,8 @@ def hermes_dispatch(event):
         hermes.get_data_from_slack_event(event)
     if key == gatekeeper.keys['slack_command_key']:
         hermes.get_data_from_slack_command(event)
+    if key == gatekeeper.keys['api_command_key']:
+        hermes.get_data_from_api_command(event)
 
     if hermes.is_pattern_valid():
         try:

@@ -33,6 +33,7 @@ class Slack:
         self.request.data = data
         x = urllib.request.urlopen(self.request).read()
         print(f"Slack.send:\n{x}")
+        self.clear()
 
     def clear(self):
         print("Slack.clear")

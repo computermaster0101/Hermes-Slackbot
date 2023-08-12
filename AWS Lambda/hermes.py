@@ -23,7 +23,7 @@ class Hermes:
         target_channel = event_body['event']['channel']
         return message, target_channel
 
-    def get_data_from_slack_command(self,event):
+    def get_data_from_slack_command(self, event):
         print("Hermes.get_data_from_slack_command")
         body = base64.b64decode(event['body']).decode('utf-8')
         parsed_body = parse_qs(body)
@@ -31,6 +31,12 @@ class Hermes:
         message = f'Received / command: {self.text}'
         target_channel = parsed_body['channel_id']
         return message, target_channel
+
+    def get_data_from_api_command(self, event):
+        print("Hermes.get_data_from_api_call")
+        self.text = event['queryStringParameters']['text']
+        message = f'Received / command: {self.text}'
+        return message
 
     def is_pattern_valid(self):
         print("Hermes.is_pattern_valid")

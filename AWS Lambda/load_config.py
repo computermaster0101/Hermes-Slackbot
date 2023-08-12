@@ -9,7 +9,9 @@ class ConfigLoader:
             self.keys = {
                 "hermes_key": config["hermes_key"],
                 "slack_event_key": config["slack_event_key"],
-                "slack_command_key": config["slack_command_key"]
+                "slack_command_key": config["slack_command_key"],
+                "api_command_key": config["api_command_key"]
+
             }
             self.nextcloud = {
                 "username": config["nextcloud_username"],
