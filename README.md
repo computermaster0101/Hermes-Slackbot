@@ -2,7 +2,7 @@
 
 Hermes is the messenger of the gods! The purpose of this utility is to allow command and control of a system using pattern matching and json files.
 
-NOTE: this readme is slightly out of date and needs to be updated.
+NOTE: this readme is very very out of date and needs to be updated however the program still works (validated 08/2023)
 
 ## Requirements: 
 
