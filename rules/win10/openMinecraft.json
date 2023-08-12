@@ -1,7 +1,7 @@
 {
   "name": "Open Minecraft",
   "patterns": [
-    "^(Open|Start|Run|Launch|Execute) ?(Minecraft)?$"
+    "^(?i)(Open|Start|Run|Launch|Execute) ?(Minecraft)?$"
   ],
   "actions": [
     "MinecraftLauncher.exe"
