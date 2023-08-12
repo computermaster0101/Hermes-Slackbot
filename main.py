@@ -100,6 +100,10 @@ class Main:
 
     def run(self):
         self.file_system_thread.start()
+
+        self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
+        print(f'{self.systemName} started listening for messages')
+
         time.sleep(3)
         print("")
         # self.audio_thread.start()
@@ -112,7 +116,7 @@ class Main:
         # self.wait_for_file_system_message()
         # self.wait_for_user_message()
 
-        self.message_sender.slack('${self.systemName} started listening for messages', self.default_slack_channel)
+
 
 if __name__ == "__main__":
     main = Main("~/hermes.json")
