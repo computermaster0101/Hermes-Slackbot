@@ -1,9 +1,7 @@
 {
   "name": "Open Email",
   "patterns": [
-    "open email",
-    "open thunderbird",
-    "start tunderbird"
+    "^open (?:(?:thunderbird)|email)$"
   ],
   "actions": [
     "nohup /usr/bin/thunderbird &>/dev/null &"

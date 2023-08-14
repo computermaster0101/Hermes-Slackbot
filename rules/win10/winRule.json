@@ -6,7 +6,7 @@
   "actions": [
     "powershell.exe -noprofile -executionpolicy bypass -file receivedMessage.ps1"
   ],
-  "runningDirectory": "~\\OneDrive\\Apps\\Hermes\\actions\\win10",
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
   "passMessage": true,
   "active": true
 }

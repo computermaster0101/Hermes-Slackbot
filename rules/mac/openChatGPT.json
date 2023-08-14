@@ -1,0 +1,12 @@
+{
+  "name": "Open ChatGPT",
+  "patterns": [
+    "^(open|launch|start)?( the)? chatgpt.*$"
+  ],
+  "actions": [
+    "open https://chat.openai.com/chat"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}
