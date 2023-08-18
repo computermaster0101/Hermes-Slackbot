@@ -32,6 +32,9 @@ def lambda_handler(event, context):
         'body': challenge
     }
     """
+    if not event['headers']['x-slack-retry-num'] is None:
+        print("returning status 200 to slackbot retry attempt")
+        return {"statusCode": 200}
 
     try:
         if event['isBase64Encoded']:
