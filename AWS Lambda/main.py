@@ -39,6 +39,7 @@ class Main:
             self.user_input_thread = threading.Thread(target=self.wait_for_user_message)
             self.file_system_thread = threading.Thread(target=self.wait_for_file_system_message)
             self.audio_thread = threading.Thread(target=self.wait_for_audio_message)
+
         except FileNotFoundError as e:
             print(f"Error loading config from {self.configFile}: {e}")
         except Exception as e:
@@ -99,23 +100,24 @@ class Main:
                 os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):
+
+        # from lambda_runner import lambda_runner
+        # from lambda_function import lambda_handler
+
+        # lambda_thread = threading.Thread(target=lambda_runner, args=(lambda_handler,))
+        # lambda_thread.start()
+
+        # self.audio_thread.start()
         self.file_system_thread.start()
+        self.user_input_thread.start()
+
+        # lambda_thread.join()
+        # self.audio_thread.join()
+        self.user_input_thread.join()
+        self.file_system_thread.join()
 
         self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
         print(f'{self.systemName} started listening for messages')
-
-        time.sleep(3)
-        print("")
-        # self.audio_thread.start()
-        # time.sleep(3)
-        # print("")
-        self.user_input_thread.start()
-        self.user_input_thread.join()
-
-        # self.wait_for_audio_message()
-        # self.wait_for_file_system_message()
-        # self.wait_for_user_message()
-
 
 
 if __name__ == "__main__":
