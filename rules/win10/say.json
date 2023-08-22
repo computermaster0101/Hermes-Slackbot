@@ -1,0 +1,12 @@
+{
+  "name": "Say",
+  "patterns": [
+    "say *"
+  ],
+  "actions": [
+    "powershell.exe -noprofile -executionpolicy bypass -file say.ps1"
+  ],
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "passMessage": true,
+  "active": true
+}
