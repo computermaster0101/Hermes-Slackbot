@@ -12,8 +12,8 @@ config_file = 'config_file.json'
 config = ConfigLoader(config_file)
 
 slack = Slack(config.slack)
-gatekeeper = Gatekeeper(config.keys, True)
 hermes = Hermes(config.hermes)
+gatekeeper = Gatekeeper(config.keys)
 nextcloud = FileUploader(nextcloud=config.nextcloud)
 
 slack.message.append('Hello from The Gatekeeper!')
@@ -22,6 +22,9 @@ slack.message.append('Hello from The Gatekeeper!')
 def lambda_handler(event, context):
     print("lambda_handler")
     print(f'An event occurred!\n{event}')
+    if context.get('local'):
+        gatekeeper.is_local = True
+        nextcloud.is_local = True
 
     """
     # this is only needed when validating slackbot for @ commands (event subscription)
