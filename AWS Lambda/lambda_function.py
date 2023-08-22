@@ -12,7 +12,7 @@ config_file = 'config_file.json'
 config = ConfigLoader(config_file)
 
 slack = Slack(config.slack)
-gatekeeper = Gatekeeper(config.keys)
+gatekeeper = Gatekeeper(config.keys, True)
 hermes = Hermes(config.hermes)
 nextcloud = FileUploader(nextcloud=config.nextcloud)
 
@@ -32,6 +32,12 @@ def lambda_handler(event, context):
         'body': challenge
     }
     """
+<<<<<<< Updated upstream
+=======
+    if not event.get('headers').get('x-slack-retry-num') is None:
+        print("returning status 200 to slackbot retry attempt")
+        return {"statusCode": 200}
+>>>>>>> Stashed changes
 
     try:
         if event['isBase64Encoded']:
@@ -45,7 +51,7 @@ def lambda_handler(event, context):
         slack.target_channel = slack.default_channel
         print('using default channel')
     finally:
-        key = event['queryStringParameters']['apikey']
+        key = event.get('queryStringParameters').get('apikey')
 
         if not event.get('headers').get('x-slack-retry-num') is None:
             print('returning status 200 to slackbot retry attempt')
@@ -63,8 +69,12 @@ def lambda_handler(event, context):
                 return {'statusCode': 200, 'body': 'OK'}
             elif key == gatekeeper.keys['api_command_key']:
                 slack.message.append('Your key has been validated! Welcome API Commander!')
-                gatekeeper.open_the_gate(event)
-                print('returning status 200 to api command')
+                if context['local']:
+                    print('Continuing with local processing')
+                    hermes_dispatch(event)
+                else:
+                    gatekeeper.open_the_gate(event)
+                    print('returning status 200 to api command')
                 return {'statusCode': 200, 'body': 'OK'}
             elif key == gatekeeper.keys['hermes_key']:
                 slack.message.append('The Gatekeeper has opened the gate for dispatching Hermes with your message!')

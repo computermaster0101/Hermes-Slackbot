@@ -1,11 +1,13 @@
 import json
 import boto3
+import os
 
 
 class Gatekeeper:
-    def __init__(self, keys):
+    def __init__(self, keys, is_local=False):
         print('Gatekeeper.__init__')
         self.keys = keys
+        self.is_local = is_local
 
     def is_key_valid(self, api_key):
         print('Gatekeeper.is_key_valid')
@@ -19,12 +21,15 @@ class Gatekeeper:
         event['queryStringParameters']['tmpkey'] = event['queryStringParameters']['apikey']
         event['queryStringParameters']['apikey'] = self.keys['hermes_key']
 
-        lambda_client = boto3.client('lambda')
-        lambda_client.invoke(
-            FunctionName='Hermes_Gatekeeper',
-            InvocationType='Event',
-            Payload=json.dumps(event)
-        )
+        if self.is_local:
+            return "local"
+        else:
+            lambda_client = boto3.client('lambda')
+            lambda_client.invoke(
+                FunctionName='Hermes_Gatekeeper',
+                InvocationType='Event',
+                Payload=json.dumps(event)
+            )
 
     def close_the_gate(self, event):
         print('Gatekeeper.close_the_gate')

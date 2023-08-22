@@ -31,7 +31,8 @@ class FileUploader:
                     print(error_message)
                     raise Exception(error_message)
         if hasattr(self, 'nc'):
-            tmp_file_path = os.path.join('/tmp', file_name)
+            tmp_file_path = file_name
+            #tmp_file_path = os.path.join('/tmp', file_name)
             with open(tmp_file_path, 'w') as f:
                 f.write(content)
             remote_path = '/Apps/Commands/' + file_name
