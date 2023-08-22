@@ -1,7 +1,18 @@
+# TODO: Complete Testing
+# * test aws slack commander - competed 8/22/23
+# * test aws slack slasher - competed 8/22/23
+# * test aws api - competed 8/22/23
+# * test local api - competed 8/22/23
+# * test local slack commander
+# * test local slack slasher
+
 import os
 import json
 import base64
+import sys
 from urllib.parse import parse_qs
+
+from requests.exceptions import MissingSchema
 
 from load_config import ConfigLoader
 from slack import Slack
@@ -9,21 +20,23 @@ from gatekeeper import Gatekeeper
 from hermes import Hermes
 from upload_file import FileUploader
 
-config_file = 'config_file.json'
-config = ConfigLoader(config_file)
+try:
+    config_file = 'config_file.json'
+    config = ConfigLoader(config_file)
+    slack = Slack(config.slack)
+    hermes = Hermes(config.hermes)
 
-slack = Slack(config.slack)
-hermes = Hermes(config.hermes)
-gatekeeper = Gatekeeper(config.keys)
-nextcloud = FileUploader(nextcloud=config.nextcloud)
+    gatekeeper = Gatekeeper(config.keys)
+    nextcloud = FileUploader(nextcloud=config.nextcloud)
 
-slack.message.append('Hello from The Gatekeeper!')
+    slack.message.append('Hello from The Gatekeeper!')
+except MissingSchema as e:
+    print("An error occurred during startup. Check your config")
+    sys.exit(1)  # Exit with a non-zero status code to indicate an error
 
 
 def lambda_handler(event, context):
     print("lambda_handler")
-    # print(f'An event occurred!\n{event}')
-    # print(f'Context: {context}')
 
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         is_local = False
@@ -50,10 +63,8 @@ def lambda_handler(event, context):
     try:
         if event['isBase64Encoded']:
             slack.target_channel = parse_qs(base64.b64decode(event['body']).decode('utf-8'))['channel_id'][0]
-        elif not event['isBase64Encoded']:
-            slack.target_channel = json.loads(event['body'])['event']['channel']
         else:
-            slack.target_channel = slack.default_channel
+            slack.target_channel = json.loads(event['body'])['event']['channel']
     except Exception as e:
         print('could not set slack target channel')
         slack.target_channel = slack.default_channel
