@@ -107,12 +107,12 @@ class Main:
         # lambda_thread = threading.Thread(target=lambda_runner, args=(lambda_handler,))
         # lambda_thread.start()
 
-        # self.audio_thread.start()
+        self.audio_thread.start()
         self.file_system_thread.start()
         self.user_input_thread.start()
 
         # lambda_thread.join()
-        # self.audio_thread.join()
+        self.audio_thread.join()
         self.user_input_thread.join()
         self.file_system_thread.join()
 
