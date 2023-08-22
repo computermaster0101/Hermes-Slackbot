@@ -1,3 +1,4 @@
+import os
 import json
 import base64
 from urllib.parse import parse_qs
@@ -21,12 +22,18 @@ slack.message.append('Hello from The Gatekeeper!')
 
 def lambda_handler(event, context):
     print("lambda_handler")
-    print(f'An event occurred!\n{event}')
-    if context.get('local'):
-        gatekeeper.is_local = True
-        nextcloud.is_local = True
+    # print(f'An event occurred!\n{event}')
+    # print(f'Context: {context}')
 
-    """
+    if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
+        is_local = False
+    else:
+        is_local = True
+
+    gatekeeper.is_local = is_local
+    nextcloud.is_local = is_local
+
+    '''
     # this is only needed when validating slackbot for @ commands (event subscription)
     body = json.loads(event['body'])
     challenge = body['challenge']
@@ -34,7 +41,8 @@ def lambda_handler(event, context):
         'statusCode':200,
         'body': challenge
     }
-    """
+    '''
+
     if not event.get('headers').get('x-slack-retry-num') is None:
         print("returning status 200 to slackbot retry attempt")
         return {"statusCode": 200}
@@ -69,7 +77,7 @@ def lambda_handler(event, context):
                 return {'statusCode': 200, 'body': 'OK'}
             elif key == gatekeeper.keys['api_command_key']:
                 slack.message.append('Your key has been validated! Welcome API Commander!')
-                if context['local']:
+                if is_local:
                     print('Continuing with local processing')
                     hermes_dispatch(event)
                 else:
