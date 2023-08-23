@@ -12,7 +12,9 @@ class AudioListener:
 
     def get_message_from_audio(self):
         r = sr.Recognizer()
+
         with sr.Microphone() as source:
+            r.adjust_for_ambient_noise(source, duration=5)
             print(f"\nListening for keyword '{self.keyword}'...")
             audio = r.listen(source)
         try:
