@@ -1,3 +1,8 @@
+# Todo:
+# * test keyword
+# * test file ingestion
+# * test user input
+
 from message_processor import MessageProcessor
 from message import Message
 from audio_listener import AudioListener
@@ -111,7 +116,6 @@ class Main:
         self.audio_thread.join()
         self.user_input_thread.join()
         self.file_system_thread.join()
-
 
 
 if __name__ == "__main__":
