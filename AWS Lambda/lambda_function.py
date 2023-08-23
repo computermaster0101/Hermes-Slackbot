@@ -23,10 +23,10 @@ from upload_file import FileUploader
 try:
     config_file = 'config_file.json'
     config = ConfigLoader(config_file)
-    slack = Slack(config.slack)
-    hermes = Hermes(config.hermes)
 
+    slack = Slack(config.slack)
     gatekeeper = Gatekeeper(config.keys)
+    hermes = Hermes(config.hermes)
     nextcloud = FileUploader(nextcloud=config.nextcloud)
 
     slack.message.append('Hello from The Gatekeeper!')
@@ -38,7 +38,7 @@ except MissingSchema as e:
 def lambda_handler(event, context):
     print("lambda_handler")
     print(f'An event occurred!\n{event}')
-    
+
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         is_local = False
     else:
