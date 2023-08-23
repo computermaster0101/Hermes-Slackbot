@@ -6,9 +6,9 @@ import requests
 
 class FileUploader:
 
-    def __init__(self, dbox=None, nextcloud=None, is_local=False):
+    def __init__(self, dbox=None, nextcloud=None):
         print("FileUploader.__init__")
-        self.is_local = is_local,
+        self.is_local = False,
         if dbox:
             self.dbx = dropbox.Dropbox(dbox['token'])
         if nextcloud:
