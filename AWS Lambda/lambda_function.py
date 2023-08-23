@@ -1,8 +1,8 @@
 # TODO: Complete Testing
-# * test aws slack commander - competed 8/22/23
-# * test aws slack slasher - competed 8/22/23
-# * test aws api - competed 8/22/23
-# * test local api - competed 8/22/23
+# * test aws slack commander
+# * test aws slack slasher
+# * test aws api
+# * test local api
 # * test local slack commander
 # * test local slack slasher
 
@@ -37,6 +37,7 @@ except MissingSchema as e:
 
 def lambda_handler(event, context):
     print("lambda_handler")
+    # print(f"event: {event}")
 
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         is_local = False
@@ -46,15 +47,14 @@ def lambda_handler(event, context):
     gatekeeper.is_local = is_local
     nextcloud.is_local = is_local
 
-    '''
     # this is only needed when validating slackbot for @ commands (event subscription)
-    body = json.loads(event['body'])
-    challenge = body['challenge']
-    return {
-        'statusCode':200,
-        'body': challenge
-    }
-    '''
+    try:
+        if 'body' in event and 'challenge' in event['body']:
+            body = json.loads(event['body'])
+            challenge = body['challenge']
+            return {'statusCode': 200, 'body': challenge}
+    except TypeError as e:
+        pass
 
     if not event.get('headers').get('x-slack-retry-num') is None:
         print("returning status 200 to slackbot retry attempt")
@@ -78,13 +78,21 @@ def lambda_handler(event, context):
         elif gatekeeper.is_key_valid(key):
             if key == gatekeeper.keys['slack_event_key']:
                 slack.message.append('Your key has been validated! Welcome Slackbot Commander!')
-                gatekeeper.open_the_gate(event)
-                print('returning status 200 to slackbot event command')
+                if is_local:
+                    print('Continuing with local processing')
+                    hermes_dispatch(event)
+                else:
+                    gatekeeper.open_the_gate(event)
+                    print('returning status 200 to slackbot event command')
                 return_response(200)
             elif key == gatekeeper.keys['slack_command_key']:
                 slack.message.append('Your key has been validated! Welcome Slackbot Slasher!')
-                gatekeeper.open_the_gate(event)
-                print('returning status 200 to slackbot slash command')
+                if is_local:
+                    print('Continuing with local processing')
+                    hermes_dispatch(event)
+                else:
+                    gatekeeper.open_the_gate(event)
+                    print('returning status 200 to slackbot slash command')
                 return {'statusCode': 200, 'body': 'OK'}
             elif key == gatekeeper.keys['api_command_key']:
                 slack.message.append('Your key has been validated! Welcome API Commander!')

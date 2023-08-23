@@ -5,9 +5,16 @@ from http import HTTPStatus
 from urllib.parse import urlparse, parse_qs
 from lambda_function import lambda_handler
 
+
 def lambda_runner(lambda_function):
     class LocalLambdaHandler(http.server.SimpleHTTPRequestHandler):
         def do_GET(self):
+            self.respond('GET')
+
+        def do_POST(self):
+            self.respond('POST')
+
+        def respond(self, http_method):
             if self.path == '/favicon.ico':
                 self.send_response(HTTPStatus.OK)
                 return
@@ -15,12 +22,37 @@ def lambda_runner(lambda_function):
             parsed_url = urlparse(self.path)
             query_params = {key: value[0] for key, value in parse_qs(parsed_url.query).items()}
 
+            content_length = int(self.headers.get('content-length', 0))
+            body = self.rfile.read(content_length)
+
             event = {
-                "httpMethod": "GET",
+                "httpMethod": http_method,
                 "queryStringParameters": query_params,
                 "path": parsed_url.path,
                 "headers": dict(self.headers),
+                "isBase64Encoded": False
             }
+
+            try:
+                content_type = self.headers.get('Content-Type', '')
+                if 'encoded' in content_type:
+                    decoded_body = body.decode('utf-8')
+                    event["body"] = decoded_body
+                    print("decoded encoded body")
+                    self.send_response(HTTPStatus.OK)
+                    self.send_header('Content-type', 'application/json')
+                    response = 'OK'
+                    response_bytes = response.encode('utf-8')
+                    self.send_header('Content-Length', len(response_bytes))
+                    self.end_headers()
+                    self.wfile.write(response_bytes)
+                else:
+                    event["body"] = body
+                    print("body not encoded")
+            except UnicodeDecodeError:
+                event["body"] = body
+                print("defaulting body because of UnicodeDecodeError")
+                pass
 
             context = {
                 "function_name": "local_lambda",
@@ -43,5 +75,6 @@ def lambda_runner(lambda_function):
     with socketserver.TCPServer(("", PORT), LocalLambdaHandler) as httpd:
         print(f"Serving at port {PORT}")
         httpd.serve_forever()
+
 
 lambda_runner(lambda_handler)
