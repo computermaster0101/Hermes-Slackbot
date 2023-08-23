@@ -37,8 +37,8 @@ except MissingSchema as e:
 
 def lambda_handler(event, context):
     print("lambda_handler")
-    # print(f"event: {event}")
-
+    print(f'An event occurred!\n{event}')
+    
     if os.environ.get("AWS_LAMBDA_FUNCTION_NAME"):
         is_local = False
     else:
