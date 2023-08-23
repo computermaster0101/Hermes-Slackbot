@@ -3,10 +3,10 @@ import boto3
 
 
 class Gatekeeper:
-    def __init__(self, keys, is_local=False):
+    def __init__(self, keys):
         print('Gatekeeper.__init__')
         self.keys = keys
-        self.is_local = is_local
+        self.is_local = False
 
     def is_key_valid(self, api_key):
         print('Gatekeeper.is_key_valid')
