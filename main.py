@@ -105,12 +105,13 @@ class Main:
         self.file_system_thread.start()
         self.user_input_thread.start()
 
+        self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
+        print(f'{self.systemName} started listening for messages')
+
         self.audio_thread.join()
         self.user_input_thread.join()
         self.file_system_thread.join()
 
-        self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
-        print(f'{self.systemName} started listening for messages')
 
 
 if __name__ == "__main__":
