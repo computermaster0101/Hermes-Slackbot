@@ -63,8 +63,10 @@ def lambda_handler(event, context):
     try:
         if event['isBase64Encoded']:
             slack.target_channel = parse_qs(base64.b64decode(event['body']).decode('utf-8'))['channel_id'][0]
-        else:
+        elif not event['isBase64Encoded']:
             slack.target_channel = json.loads(event['body'])['event']['channel']
+        else:
+            slack.target_channel = slack.default_channel
     except Exception as e:
         print('could not set slack target channel')
         slack.target_channel = slack.default_channel
