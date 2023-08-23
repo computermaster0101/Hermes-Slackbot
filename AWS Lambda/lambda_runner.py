@@ -44,4 +44,4 @@ def lambda_runner(lambda_function):
         print(f"Serving at port {PORT}")
         httpd.serve_forever()
 
-
+lambda_runner(lambda_handler)

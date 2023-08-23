@@ -46,3 +46,6 @@ class FileUploader:
                 error_message = f"Failed to upload {file_name} to Nextcloud\nDetails:\n{e}"
                 print(error_message)
                 raise Exception(error_message)
+            finally:
+                if self.is_local:
+                    os.remove(tmp_file_path)
