@@ -4,7 +4,7 @@
     "say *"
   ],
   "actions": [
-    "powershell.exe -noprofile -executionpolicy bypass -file say.ps1"
+    "python.exe say.py"
   ],
   "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
   "passMessage": true,
