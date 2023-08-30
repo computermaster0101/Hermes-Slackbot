@@ -1,9 +1,11 @@
 import http.server
 import socketserver
+import socket
 import json
 from http import HTTPStatus
 from urllib.parse import urlparse, parse_qs
 from lambda_function import lambda_handler
+
 
 
 def lambda_runner(lambda_function):
@@ -73,8 +75,18 @@ def lambda_runner(lambda_function):
     PORT = 8000
 
     with socketserver.TCPServer(("", PORT), LocalLambdaHandler) as httpd:
-        print(f"Serving at port {PORT}")
+        print(f"Listening on {get_local_ip()}:{PORT}")
         httpd.serve_forever()
 
-
+def get_local_ip():
+    # Create a socket and connect to an external server to retrieve the local IP address
+    # This method is used to determine the local IP address currently in use
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        sock.connect(("8.8.8.8", 80))  # Connect to a remote server
+        local_ip = sock.getsockname()[0]  # Get the local IP address
+    finally:
+        sock.close()
+    return local_ip
+	
 lambda_runner(lambda_handler)
