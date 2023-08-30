@@ -1,12 +1,12 @@
 {
   "name": "Open Minecraft",
   "patterns": [
-    "^(?i)(Open|Start|Run|Launch|Execute) ?(Minecraft)?$"
+    "^(open|start|run|launch)( the)? minecraft$"
   ],
   "actions": [
     "MinecraftLauncher.exe"
   ],
-  "runningDirectory": "C:\\Program Files (x86)\\Minecraft Launcher",
+  "runningDirectory": "C:\\Program Files (x86)",
   "passMessage": false,
   "active": true
 }
