@@ -1,5 +1,6 @@
 import re
 import subprocess
+from sys import exception
 
 
 class MessageProcessor:
@@ -14,28 +15,32 @@ class MessageProcessor:
             output.append("")
             output.append(f"Processing message '{message}' against rule dictionary")
             for rule in self.rule_set.rules.values():
-                # output.append("")
-                # output.append(f"Processing rule: {rule}")
+                # print(f"Processing rule: {rule.name}")
                 for pattern in rule.patterns:
-                    # output.append(f"Matching message '{message.text}' against pattern '{pattern}'")
-                    if re.search(pattern, message.text):
-                        match = True
-                        output.append(f"Message '{message.text}' matched pattern '{pattern}'\n\nRule:\n{rule}")
-                        if rule.active:
-                            for action in rule.actions:
-                                if rule.passMessage:  # if the message should be sent with the action update the command
-                                    print(message.text)
-                                    cmd = f"{action} \"{message.text}\""
-                                else:
-                                    cmd = action
-                                output.append(f"Running action '{action}' in directory '{rule.runningDirectory}'")
-                                try:
-                                    subprocess.Popen(cmd, cwd=rule.runningDirectory, shell=True)
-                                except subprocess.CalledProcessError as e:
-                                    output.append(f"Error running action {action}: {e}")
-                        else:
-                            output.append(f"Rule {rule.name} is inactive. Skipping.")
-                            continue
+                    # print(f"Matching message '{message.text}' against pattern '{pattern}'")
+                    try:
+                        if re.search(pattern, message.text):
+                            match = True
+                            output.append(f"Message '{message.text}' matched pattern '{pattern}'")
+                            if rule.active:
+                                for action in rule.actions:
+                                    if rule.passMessage: 
+                                        print(message.text)
+                                        cmd = f"{action} \"{message.text}\""
+                                    else:
+                                        cmd = action
+                                    output.append(f"Running action '{action}' in directory '{rule.runningDirectory}'")
+                                    try:
+                                        subprocess.Popen(cmd, cwd=rule.runningDirectory, shell=True)
+                                    except subprocess.CalledProcessError as e:
+                                        output.append(f"Error running action {action}: {e}")
+                            else:
+                                output.append(f"Rule '{rule.name}' is inactive. Skipping.")
+                                continue
+                    except Exception as e:
+                        output.append(f"An error occured while matching patterns for rule '{rule.name}'")
+                        print(f"An error occured while matching patterns for rule '{rule.name}'\nError: {e}")
+                        pass
             if not match:  # if the pattern/message does not match log it
                 output.append(f"Undefined Pattern: {message.text}")
             return output
