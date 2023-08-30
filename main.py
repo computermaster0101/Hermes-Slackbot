@@ -52,11 +52,19 @@ class Main:
 
     def wait_for_user_message(self):
         while True:
-            user_input = input("Please enter a message: ")
-            message = Message(message_text=user_input, message_file=None, device=self.systemName)
-            print(message)
-            self.process_message(message)
-
+            try:
+                user_input = input("Please enter a message: ")
+                message = Message(message_text=user_input, message_file=None, device=self.systemName)
+                print(message)
+                self.process_message(message)
+            except EOFError as e:
+                print("\nExiting...\n")
+                os._exit(0)
+            except KeyboardInterrupt as e:
+                print("\nExiting...\n")
+                os._exit(0)
+             
+                
     def wait_for_file_system_message(self):
         print(f"Listen for message file {self.messageFile}")
         while True:
@@ -105,17 +113,23 @@ class Main:
                 os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):
+        
+        try:
+            
+            self.audio_thread.start()
+            self.file_system_thread.start()
 
-        self.audio_thread.start()
-        self.file_system_thread.start()
-        self.user_input_thread.start()
 
-        self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
-        print(f'{self.systemName} started listening for messages')
+            self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
+            print(f'{self.systemName} started listening for messages')
 
-        self.audio_thread.join()
-        self.user_input_thread.join()
-        self.file_system_thread.join()
+            self.user_input_thread.start()
+            self.user_input_thread.join()
+            
+            #self.wait_for_user_message()
+            
+        except Exception as e:
+            print(f'An unexpected error occured: {e}')
 
 
 if __name__ == "__main__":
