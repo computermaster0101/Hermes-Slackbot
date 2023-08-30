@@ -19,6 +19,10 @@ def text_to_speech(text):
     while pygame.mixer.music.get_busy():
         clock.tick(10)
 
+    # Stop and close the mixer
+    pygame.mixer.music.stop()
+    pygame.mixer.quit()
+
     # Clean up: remove the generated audio file
     os.remove("output.mp3")
 
@@ -26,10 +30,9 @@ def text_to_speech(text):
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         input_text = " ".join(sys.argv[1:])
-        words = input_text.split(" ", 1)  # Split into two parts, at most 1 split
-        if len(words) > 1:
-            text_to_speech(words[1])  # Use the second part after the split
-        else:
-            print("Please provide a text to convert to speech (with at least two words).")
+        if input_text.startswith('say '):
+            input_text = input_text[4:]
+        print(input_text)
+        text_to_speech(input_text)
     else:
         print("Please provide a text to convert to speech.")

@@ -1,7 +1,8 @@
 {
   "name": "Say",
   "patterns": [
-    "say *"
+    "say *",
+    ".*"
   ],
   "actions": [
     "python.exe say.py"
