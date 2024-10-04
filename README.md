@@ -2,8 +2,9 @@
 
 Hermes is the messenger of the gods! The purpose of this utility is to allow command and control of a system using pattern matching and json files.
 
-NOTE: this readme is very very out of date and needs to be updated however the program still works (validated 10/4/2024)
-Update: the api can be ran ouside of Lambda and there's a rebuilt container in dockerhub at mherber2/hermes-server that just needs env vars (see Hermes_Server/.env for example)
+* NOTE: this readme is very very out of date and needs to be updated however the program still works (validated 10/4/2024)
+* Update: the api can be ran ouside of Lambda and there's a rebuilt container in dockerhub at mherber2/hermes-server that just needs env vars (see Hermes_Server/.env for example)
+* Coming soon: chatgpt hook for automatic rule generation (BEWARE!)
 
 ## Requirements: 
 
