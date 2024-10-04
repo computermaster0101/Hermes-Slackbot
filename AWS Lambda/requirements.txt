@@ -1,1 +1,5 @@
-boto3
+boto3==1.35.33
+dropbox==12.0.2
+nc_py_api==0.17.1
+Pillow==10.4.0
+Requests==2.32.3
