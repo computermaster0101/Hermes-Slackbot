@@ -3,4 +3,4 @@
 __pycache__/*
 *.pyc
 .vs/*
-AWS Lambda/.env
+Hermes_server/.env
