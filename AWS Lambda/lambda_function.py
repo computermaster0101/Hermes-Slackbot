@@ -21,8 +21,7 @@ from hermes import Hermes
 from upload_file import FileUploader
 
 try:
-    config_file = 'config_file.json'
-    config = ConfigLoader(config_file)
+    config = ConfigLoader()
 
     slack = Slack(config.slack)
     gatekeeper = Gatekeeper(config.keys)
