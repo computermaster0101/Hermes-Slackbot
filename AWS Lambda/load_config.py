@@ -20,7 +20,8 @@ class ConfigLoader:
             self.nextcloud = {
                 "username": self._get_env_var("NEXTCLOUD_USERNAME"),
                 "token": self._get_env_var("NEXTCLOUD_ACCESS_TOKEN"),
-                "url": self._get_env_var("NEXTCLOUD_URL")
+                "url": self._get_env_var("NEXTCLOUD_URL"),
+                "path": self._get_env_var("NEXTCLOUD_PATH")
             }
             self.dropbox = {
                 "token": self._get_env_var("DROPBOX_ACCESS_TOKEN")

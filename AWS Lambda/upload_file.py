@@ -13,6 +13,7 @@ class FileUploader:
         if dbox:
             self.dbx = dropbox.Dropbox(dbox['token'])
         if nextcloud:
+            self.nextcloud_path=nextcloud['path']
             self.nc = nc_py_api.Nextcloud(
                 nextcloud_url=nextcloud['url'],
                 nc_auth_user=nextcloud['username'],
@@ -21,8 +22,8 @@ class FileUploader:
 
     def upload(self, file_name, content):
         print("FileUploader.upload")
-
-        remote_path = '/Apps/Commands/' + file_name
+        #TODO: either fix pathing to include dropbox or drop dropbox because of dropbox key experation policy
+        remote_path = (self.nextcloud_path if self.nextcloud_path else '/Apps/Commands/') + file_name
         if self.is_local:
             tmp_file_path = file_name
         else:
