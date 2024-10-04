@@ -1,5 +1,4 @@
-# Ignore the Dockerfile
 Dockerfile
-
-# Ignore the .env file containing environment variables
 .env
+.dockerignore
+run.bat
