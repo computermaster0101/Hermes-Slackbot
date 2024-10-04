@@ -1,0 +1,12 @@
+{
+  "name": "Open Calendar",
+  "patterns": [
+    "^(open|start|run|launch)( the)?( my)? calendar$"
+  ],
+ "actions": [
+    "openCalendar.bat"
+  ],
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "passMessage": false,
+  "active": true
+}

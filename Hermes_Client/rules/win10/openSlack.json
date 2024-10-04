@@ -1,0 +1,12 @@
+{
+  "name": "Open Slack",
+  "patterns": [
+    "^(open|start|run|launch)( the)?( my)? slack$"
+  ],
+  "actions": [
+    "openSlack.bat"
+  ],
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "passMessage": false,
+  "active": true
+}

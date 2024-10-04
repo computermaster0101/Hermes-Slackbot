@@ -1,0 +1,12 @@
+{
+  "name": "Open Google Search",
+  "patterns": [
+    "[Ss]earch .*"
+  ],
+  "actions": [
+    "gnome-www-browser"
+  ],
+  "runningDirectory": "",
+  "passMessage": true,
+  "active": true
+}

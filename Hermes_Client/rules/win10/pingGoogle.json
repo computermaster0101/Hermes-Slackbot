@@ -1,0 +1,12 @@
+{
+  "name": "Ping Google",
+  "patterns": [
+    "(ping|pink|pin)\\s[Gg]oogle(\\.com)?"
+  ],
+  "actions": [
+    "ping google.com"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

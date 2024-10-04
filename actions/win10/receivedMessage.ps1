@@ -1,1 +1,0 @@
-powershell.exe -Command "Add-Type -AssemblyName PresentationFramework;[System.Windows.MessageBox]::Show('Message Received: $args','Hermes - Received Command','OK','Information')"

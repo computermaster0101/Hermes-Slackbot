@@ -1,0 +1,17 @@
+{
+  "name": "Reboot",
+  "patterns": [
+    "shutdown",
+    "shut down",
+    "shut off",
+    "turn off",
+    "power down",
+    "power off"
+  ],
+  "actions": [
+    "systemctl poweroff -i"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

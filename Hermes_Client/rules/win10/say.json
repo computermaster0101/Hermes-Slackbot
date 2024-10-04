@@ -1,0 +1,13 @@
+{
+  "name": "Say",
+  "patterns": [
+    "say *",
+    ".*"
+  ],
+  "actions": [
+    "python.exe say.py"
+  ],
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "passMessage": true,
+  "active": true
+}

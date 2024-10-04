@@ -1,0 +1,12 @@
+{
+  "name": "Open calc",
+  "patterns": [
+	"^(open|start|run|launch) (the )?calc.*$"
+  ],
+  "actions": [
+    "calc"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}

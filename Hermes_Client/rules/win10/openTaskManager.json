@@ -1,0 +1,12 @@
+{
+  "name": "Open Task Manager",
+  "patterns": [
+    "^(open|start|run|launch)( the)?( my)? task manager$"
+  ],
+  "actions": [
+    "taskmgr.exe"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}
