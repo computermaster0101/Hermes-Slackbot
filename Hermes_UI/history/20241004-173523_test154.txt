@@ -1,0 +1,8 @@
+{"Device": "test154", "Text": "", "Timestamp": null, "channel": null}
+
+Processing message '{"Device": "test154", "Text": "", "Timestamp": null, "channel": null}' against rule dictionary
+Message '' matched pattern '.*'
+Running action 'python.exe say.py' in directory 'C:\Users\OneTech LLC\Documents\GitHub\Hermes\actions\win10'
+An error occured while matching patterns for rule 'Say'
+Message '' matched pattern '.*'
+Rule 'Received Message' is inactive. Skipping.

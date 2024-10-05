@@ -1,0 +1,12 @@
+{
+  "name": "Open Google Search",
+  "patterns": [
+    "[Ss]earch .*"
+  ],
+  "actions": [
+    "searchGoogle.bat"
+  ],
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "passMessage": true,
+  "active": true
+}

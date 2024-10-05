@@ -1,0 +1,12 @@
+{
+  "name": "Open Mail",
+  "patterns": [
+    "^(open|start|run|launch)( the)?( my)? email$"
+  ],
+  "actions": [
+    "openMail.bat"
+  ],
+  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "passMessage": false,
+  "active": true
+}

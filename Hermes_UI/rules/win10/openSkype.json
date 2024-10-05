@@ -1,0 +1,12 @@
+{
+  "name": "Open Skype",
+  "patterns": [
+    "^(open|start|run|launch)( the)?( my)? skype$"
+  ],
+  "actions": [
+    "skype.exe"
+  ],
+  "runningDirectory": "",
+  "passMessage": false,
+  "active": true
+}
