@@ -1,17 +1,19 @@
 import os
-import json
 import subprocess
-from flask import Flask, render_template, request, jsonify
+import threading
+from flask import Flask
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
-import threading
+from routes import init_routes  # Import the function to initialize routes
 from rule_set import RuleSet  # Import RuleSet
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 # Load environment variables from .env
 load_dotenv()
 HOST = os.getenv('HOST', 'localhost')
 PORT = int(os.getenv('PORT', 5000))
-SECRET_KEY = os.getenv('SECRET_KEY', 'your_default_secret_key')  # Set a default if not in .env
+SECRET_KEY = os.getenv('SECRET_KEY', 'your_default_secret_key')
 RULES_DIR = os.getenv('RULESDIR', './rules/win10')  # Path to the rules directory
 
 app = Flask(__name__)
@@ -21,28 +23,47 @@ socketio = SocketIO(app)
 # Initialize the RuleSet object
 rules = RuleSet(RULES_DIR)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Initialize routes
+init_routes(app, rules, socketio)
 
-@app.route('/rules', methods=['GET'])
-def get_rules():
-    """Fetch the rules as a JSON response."""
-    rules_data = {file: str(rule) for file, rule in rules.rules.items()}
-    return jsonify(rules_data)
+class RulesDirectoryHandler(FileSystemEventHandler):
+    """Handler for monitoring the rules directory and recreating the RuleSet on changes."""
+    def on_any_event(self, event):
+        global rules
+        # Recreate the RuleSet whenever a file is created, modified, deleted, or moved
+        print("Change detected in rules directory. Reloading rules...")
+        rules = RuleSet(RULES_DIR)
+        socketio.emit('rules_updated', {file: str(rule) for file, rule in rules.rules.items()})
+
+def watch_rules_directory():
+    """Watch the rules directory for any changes and update the RuleSet accordingly."""
+    event_handler = RulesDirectoryHandler()
+    observer = Observer()
+    observer.schedule(event_handler, RULES_DIR, recursive=False)
+    observer.start()
+
+    try:
+        while True:
+            observer.join(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
 
 def run_main():
     """Function to run the main message processing logic."""
-    # Start main.py as a subprocess
     process = subprocess.Popen(['python', 'main.py'])
     process.wait()  # Wait for the subprocess to complete
-    # If main.py exits, exit the parent process
     os._exit(0)
 
 if __name__ == '__main__':
     # Start the main processing logic in a separate thread
     main_thread = threading.Thread(target=run_main)
     main_thread.start()
+
+    # Start a thread to watch the rules directory for changes
+    watch_thread = threading.Thread(target=watch_rules_directory)
+    watch_thread.daemon = True
+    watch_thread.start()
 
     # Start the Flask-SocketIO server
     print(f'Starting on {HOST}:{PORT}')
