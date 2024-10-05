@@ -16,7 +16,7 @@ from watchdog.events import FileSystemEventHandler
 # Load environment variables from .env
 load_dotenv()
 HOST = os.getenv('HOST', 'localhost')
-PORT = int(os.getenv('PORT', 5000))
+PORT = os.getenv('PORT', 5000)
 SECRET_KEY = os.getenv('SECRET_KEY', 'your_default_secret_key')
 RULES_DIR = os.getenv('RULESDIR', './rules/win10')  # Path to the rules directory
 
