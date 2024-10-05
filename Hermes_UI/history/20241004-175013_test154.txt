@@ -1,7 +1,0 @@
-{"Device": "test154", "Text": "", "Timestamp": null, "channel": null}
-
-Processing message '{"Device": "test154", "Text": "", "Timestamp": null, "channel": null}' against rule dictionary
-Message '' matched pattern '.*'
-Rule 'Say' is inactive. Skipping.
-Message '' matched pattern '.*'
-Running action 'powershell.exe -noprofile -executionpolicy bypass -file receivedMessage.ps1' in directory './actions/win10'

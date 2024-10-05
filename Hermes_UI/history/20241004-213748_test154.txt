@@ -1,7 +1,0 @@
-{"Device": "test154", "Text": "    <script src=\"/static/js/history.js\"></script>", "Timestamp": "\"timestamp\":\"October 04, 2024 at 09:37PM\"", "channel": null}
-
-Processing message '{"Device": "test154", "Text": "    <script src=\"/static/js/history.js\"></script>", "Timestamp": "\"timestamp\":\"October 04, 2024 at 09:37PM\"", "channel": null}' against rule dictionary
-Message '    <script src="/static/js/history.js"></script>' matched pattern '.*'
-Rule 'Say' is inactive. Skipping.
-Message '    <script src="/static/js/history.js"></script>' matched pattern '.*'
-Running action 'powershell.exe -noprofile -executionpolicy bypass -file receivedMessage.ps1' in directory './actions/win10'
