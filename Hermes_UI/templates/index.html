@@ -41,6 +41,7 @@
             justify-content: center;
             align-items: center;
             position: absolute; /* Position it centrally within the container */
+            transition: border-color 0.3s; /* Smooth transition for border color */
         }
 
         .microphoneInner {
@@ -51,6 +52,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            transition: background-color 0.3s; /* Smooth transition for inner color */
         }
 
         .microphone {
@@ -63,11 +65,23 @@
                 color: red; /* Change color when active */
             }
 
+        .inputContainer {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px; /* Space between the microphone and the input */
+        }
+
+            .inputContainer input {
+                width: 70%; /* Width of the input box */
+                margin-right: 10px; /* Space between input and button */
+            }
+
         .tab-pane {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100%; /* Fill available space */
+            flex-direction: column; /* Stack elements vertically */
         }
     </style>
 </head>
@@ -95,11 +109,15 @@
             <!-- Microphone Tab -->
             <div class="tab-pane fade show active" id="microphone" role="tabpanel" aria-labelledby="microphone-tab">
                 <div class="microphoneContainer mt-3">
-                    <div class="microphoneCircle">
-                        <div class="microphoneInner">
+                    <div class="microphoneCircle" id="microphoneCircle">
+                        <div class="microphoneInner" id="microphoneInner">
                             <i class="fa fa-microphone microphone" id="clickable" onclick="toggle()" accesskey="s"></i>
                         </div>
                     </div>
+                </div>
+                <div class="inputContainer">
+                    <input type="text" id="userInput" placeholder="Enter a sentence..." />
+                    <button class="btn btn-primary" id="sendButton" onclick="sendMessage()">Send</button>
                 </div>
             </div>
 
@@ -165,12 +183,29 @@
 
         function toggle() {
             const microphoneIcon = document.getElementById("clickable");
+            const microphoneCircle = document.getElementById("microphoneCircle");
+            const microphoneInner = document.getElementById("microphoneInner");
+
             if (isActive) {
                 microphoneIcon.classList.remove('active'); // Remove active class
+                microphoneCircle.style.borderColor = "#0099CC"; // Reset border color
+                microphoneInner.style.backgroundColor = "rgba(128, 128, 128, 0.5)"; // Reset inner color
                 isActive = false; // Set state to inactive
             } else {
                 microphoneIcon.classList.add('active'); // Add active class
+                microphoneCircle.style.borderColor = "red"; // Change border color to red
+                microphoneInner.style.backgroundColor = "rgba(255, 182, 193, 0.5)"; // Change inner color to light pink
                 isActive = true; // Set state to active
+            }
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById("userInput").value;
+            if (userInput) {
+                alert("Message sent: " + userInput);
+                document.getElementById("userInput").value = ""; // Clear input field after sending
+            } else {
+                alert("Please enter a sentence.");
             }
         }
     </script>
