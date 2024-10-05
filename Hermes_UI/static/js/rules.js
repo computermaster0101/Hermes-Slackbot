@@ -1,10 +1,17 @@
 // Function to populate the table with rules
-function populateRulesTable(rules) {
+function populateRulesTable(rule_set) {
     const rulesTableBody = $('#rules-table-body');
     rulesTableBody.empty(); // Clear existing rows
 
-    $.each(rules, function (fileName, ruleDetails) {
-        const ruleData = parseRuleDetails(ruleDetails);
+    // Iterate over the rules in the provided rule set
+    $.each(rule_set.rules, function (fileName, ruleDetails) {
+        // Instead of parsing strings, we directly use the structured ruleDetails object
+        const ruleData = {
+            name: ruleDetails.name,
+            patterns: ruleDetails.patterns.join(', '), // Assuming patterns is an array
+            actions: ruleDetails.actions.join(', '), // Assuming actions is an array
+            active: ruleDetails.active,
+        };
 
         // Create a row for each rule
         const row = `<tr>
@@ -21,7 +28,7 @@ function populateRulesTable(rules) {
         rulesTableBody.append(row);
     });
 
-    // Attach click event for edit buttons
+    // Attach click event for edit buttons after the new rows are added
     $('.edit-rule-btn').click(function () {
         const ruleFileName = $(this).data('rule');
         openEditRuleModal(ruleFileName);
@@ -31,15 +38,4 @@ function populateRulesTable(rules) {
 // Function to open the edit rule modal
 function openEditRuleModal(fileName) {
     socket.emit('request_rule', fileName); // Request rule details via WebSocket
-}
-
-// Parse the rule details string into a structured object
-function parseRuleDetails(ruleDetails) {
-    const ruleLines = ruleDetails.split('\n');
-    return {
-        name: ruleLines[0].split(': ')[1],
-        patterns: ruleLines[1].split(': ')[1] || 'N/A',
-        actions: ruleLines[2].split(': ')[1] || 'N/A',
-        active: ruleLines[6].split(': ')[1] === 'True'
-    };
 }

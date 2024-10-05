@@ -2,6 +2,17 @@
 const socket = io.connect();
 
 // Listen for updates from the server
+socket.on('new_rule_set', (rule_set) => {
+    //for (const [filename, rule] of Object.entries(rule_set.rules)) {
+    //    console.log(`Rule file: ${filename}`);
+    //    console.log(`Rule name: ${rule.name}`);
+    //    console.log(`Patterns: ${rule.patterns}`);
+    //    console.log(`Actions: ${rule.actions}`);
+    //    console.log(`Active: ${rule.active}`);
+    //}
+    populateRulesTable(rule_set)
+});
+
 socket.on('rules_updated', function (updatedRules) {
     console.log("Received updated rules:", updatedRules);
     populateRulesTable(updatedRules);

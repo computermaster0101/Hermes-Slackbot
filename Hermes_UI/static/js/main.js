@@ -1,8 +1,15 @@
 $(document).ready(function () {
     // Initial population of the rules table
-    $.getJSON('/rules', function (data) {
-        populateRulesTable(data);
-    });
+    //$.getJSON('/rules', function (data) {
+    //    populateRulesTable(data);
+    //});
+    const socket = io();
+
+    // Request the rules when the document is ready
+    socket.emit('get_rule_set'); // Emit an event to request the rule set
+
+
+
 
     // Handle Add New Rule button click
     $('#add-rule-btn').click(function () {

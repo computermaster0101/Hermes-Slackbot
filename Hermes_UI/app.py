@@ -30,6 +30,38 @@ rules = RuleSet(RULES_DIR)
 # Initialize routes
 init_routes(app, rules, socketio)
 
+@socketio.on('get_rule_set')
+def get_rule_set():
+    global rules
+    rules = None  # Optional: Clears previous rules
+
+    # Create a new RuleSet instance
+    rules = RuleSet(RULES_DIR)
+
+    # Prepare a dictionary to hold the serialized rule set data
+    rule_set_data = {
+        'rules': {}  # Initialize an empty dictionary to hold rule data
+    }
+
+    # Iterate over each rule to extract necessary information
+    for filename, rule in rules.rules.items():
+        # Populate the rule set data with the necessary attributes
+        rule_set_data['rules'][filename] = {
+            'name': rule.name,
+            'patterns': rule.patterns,
+            'actions': rule.actions,
+            'active': rule.active,
+            'runningDirectory': rule.runningDirectory,
+            'passMessage': rule.passMessage
+        }
+
+    print('hit')  # Indicate that the function was hit
+
+    # Emit the serialized rule set data back to the client
+    socketio.emit('new_rule_set', rule_set_data)
+
+
+
 class RulesDirectoryHandler(FileSystemEventHandler):
     """Handler for monitoring the rules directory and recreating the RuleSet on changes."""
     def on_any_event(self, event):
