@@ -1,6 +1,10 @@
 import os
+import json
+
 import subprocess
 import threading
+import time
+
 from flask import Flask
 from flask_socketio import SocketIO
 from dotenv import load_dotenv
@@ -29,11 +33,16 @@ init_routes(app, rules, socketio)
 class RulesDirectoryHandler(FileSystemEventHandler):
     """Handler for monitoring the rules directory and recreating the RuleSet on changes."""
     def on_any_event(self, event):
-        global rules
-        # Recreate the RuleSet whenever a file is created, modified, deleted, or moved
-        print("Change detected in rules directory. Reloading rules...")
-        rules = RuleSet(RULES_DIR)
-        socketio.emit('rules_updated', {file: str(rule) for file, rule in rules.rules.items()})
+        if event.event_type in ['modified', 'created']:  # Handle only specific events
+            global rules
+            # Recreate the RuleSet whenever a file is created, modified, deleted, or moved after a short delay
+            print("Change detected in rules directory. Reloading rules...")
+            rules = None  # Optional: Clears any references
+            rules = RuleSet(RULES_DIR)
+            rules_data = {file: str(rule) for file, rule in rules.rules.items()}
+            socketio.emit('rules_updated', json.dumps(rules_data))
+            #socketio.emit('rules_updated', {file: str(rule) for file, rule in rules.rules.items()})
+            
 
 def watch_rules_directory():
     """Watch the rules directory for any changes and update the RuleSet accordingly."""

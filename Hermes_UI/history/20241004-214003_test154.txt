@@ -1,0 +1,9 @@
+{"Device": "test154", "Text": "say hello", "Timestamp": "\"timestamp\":\"October 04, 2024 at 09:40PM\"", "channel": null}
+
+Processing message '{"Device": "test154", "Text": "say hello", "Timestamp": "\"timestamp\":\"October 04, 2024 at 09:40PM\"", "channel": null}' against rule dictionary
+Message 'say hello' matched pattern 'say *'
+Rule 'Say' is inactive. Skipping.
+Message 'say hello' matched pattern '.*'
+Rule 'Say' is inactive. Skipping.
+Message 'say hello' matched pattern '.*'
+Running action 'powershell.exe -noprofile -executionpolicy bypass -file receivedMessage.ps1' in directory './actions/win10'
