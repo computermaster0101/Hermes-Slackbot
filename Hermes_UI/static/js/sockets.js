@@ -1,12 +1,10 @@
 const socket = io();
 
 socket.on('new_rule_set', (rule_set) => {
-    console.log('got new rule set');
     populateRulesTable(rule_set);
 });
 
 socket.on('rules_updated', (updatedRules) => {
-    console.log("Received updated rules:", updatedRules);
     populateRulesTable(updatedRules);
 });
 

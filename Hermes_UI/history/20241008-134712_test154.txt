@@ -1,0 +1,7 @@
+{"Device": "test154", "Text": "hi", "Timestamp": "\"timestamp\":\"October 08, 2024 at 01:47PM\"", "channel": null}
+
+Processing message '{"Device": "test154", "Text": "hi", "Timestamp": "\"timestamp\":\"October 08, 2024 at 01:47PM\"", "channel": null}' against rule dictionary
+Message 'hi' matched pattern '.*'
+Running action 'python.exe say.py' in directory './actions/win10'
+Message 'hi' matched pattern '.*'
+Running action 'powershell.exe -noprofile -executionpolicy bypass -file receivedMessage.ps1' in directory './actions/win10'

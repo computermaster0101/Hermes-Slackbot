@@ -238,3 +238,12 @@ form {
     .radio-group label {
         margin: 0 10px;
     }
+
+form label {
+    padding: 5px 10px;
+    display: inline-block; 
+}
+
+#editRuleModal .modal-body label {
+    text-transform: capitalize; 
+}
