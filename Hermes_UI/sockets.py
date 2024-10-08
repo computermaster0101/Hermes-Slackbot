@@ -1,20 +1,50 @@
 import os
 import json
+import time
 from rule_set import RuleSet
+from message_processor import MessageProcessor
+from message import Message
+from dotenv import load_dotenv
 from flask import render_template, jsonify
 
+load_dotenv()
+DEVICE = os.getenv('SYSNAME', 'missingName')
 RULES_DIR = os.getenv('RULESDIR', './rules/win10')
+HIST_DIR = os.getenv('HISTDIR', './history')
 rules = RuleSet(RULES_DIR)
+message_processor = MessageProcessor(rules)
 
 def init_routes(app, socketio):
     @app.route('/')
     def index():
         return render_template('index.html')
 
+    @socketio.on('send_message')
+    def send_message(message):
+        try:
+            message_instance = Message(
+                message_text=message.get('text'),
+                message_file=None,
+                device=DEVICE
+            )
+
+            output = message_processor.process_message(message_instance, rules)
+            output_string = "\n".join(output)
+
+            history_file = os.path.join(HIST_DIR, f"{time.strftime('%Y%m%d-%H%M%S')}_{DEVICE}.txt")
+            os.makedirs(os.path.dirname(history_file), exist_ok=True)
+
+            with open(history_file, "w") as f:
+                f.write(f"{message_instance}\n{output_string}")
+
+            socketio.emit('message_response', {'status': 'success', 'output': output_string})
+
+        except Exception as e:
+            socketio.emit('message_response', {'status': 'error', 'message': str(e)})
+
     @socketio.on('get_rule_set')
     def get_rule_set():
         global rules
-        rules = None
         rules = RuleSet(RULES_DIR)
 
         rule_set_data = {
@@ -48,8 +78,6 @@ def init_routes(app, socketio):
                 'passMessage': rule.passMessage
             }
             socketio.emit('receive_rule', rule_details)
-        else:
-            print(f"Rule {file_name} not found.")
 
     @socketio.on('get_history')
     def get_history():
@@ -74,10 +102,9 @@ def init_routes(app, socketio):
                                 'processing_results': processing_results
                             })
                         except json.JSONDecodeError:
-                            print(f"Error decoding JSON from {filename}. Skipping...")
-        except Exception as e:
-            print(f"Error reading history directory: {e}")
-
+                            pass
+        except Exception:
+            pass
         socketio.emit('update_history', history_data)
 
     @app.route('/history/<filename>', methods=['GET'])
@@ -92,6 +119,5 @@ def init_routes(app, socketio):
             with open(file_path, 'r') as f:
                 content = f.read()
             return content, 200
-        except Exception as e:
-            print(f"Error reading file {filename}: {e}")
+        except Exception:
             return jsonify({"error": "File not found or cannot be read"}), 404

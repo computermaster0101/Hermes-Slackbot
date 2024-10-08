@@ -10,6 +10,7 @@ function escapeHtml(unsafe) {
 function populateHistoryTable(history) {
     const historyTableBody = $('#history-table-body');
     historyTableBody.empty();
+    history.sort().reverse();
 
     $.each(history, function (index, entry) {
         const escapedMessage = escapeHtml(JSON.stringify(entry.message));

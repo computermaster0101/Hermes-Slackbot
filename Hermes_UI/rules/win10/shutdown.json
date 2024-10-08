@@ -6,7 +6,7 @@
   "actions": [
     "python.exe shutdown.py"
   ],
-  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "runningDirectory": "./actions/win10",
   "passMessage": false,
   "active": true
 }
