@@ -1,0 +1,21 @@
+<link rel="stylesheet" href="/static/css/input.css">
+<div class="tab-pane fade show active" id="microphone" role="tabpanel" aria-labelledby="microphone-tab">
+    <div class="flexContainer">
+        <div class="microphoneContainer mt-3">
+            <div class="microphoneCircle" id="microphoneCircle">
+                <div class="microphoneInner" id="microphoneInner">
+                    <i class="fa fa-microphone microphone" id="clickable" onclick="microphone_toggle()" accesskey="s"></i>
+                </div>
+            </div>
+        </div>
+        <div class="contentText">
+            <div id="text"></div>
+            <p class="demo"></p>
+        </div>
+    </div>
+    <div class="inputContainer">
+        <input type="text" id="userInput" placeholder="Enter a sentence..." />
+        <button class="btn btn-primary" id="sendButton" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+<script src="/static/js/input.js"></script>

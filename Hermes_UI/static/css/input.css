@@ -1,0 +1,108 @@
+.tab-pane {
+    display: flex;
+    flex-direction: column;
+}
+
+.flexContainer {
+    display: flex;
+    align-items: center;
+}
+
+.microphoneContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    width: 50%;
+    margin: auto;
+    background: white;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.microphoneCircle {
+    height: 160px;
+    width: 160px;
+    border: 8px solid #0099CC;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: border-color 0.3s;
+}
+
+.microphoneInner {
+    height: 144px;
+    width: 144px;
+    background: rgba(128, 128, 128, 0.5);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.microphone {
+    font-size: 80px;
+    color: #0099CC;
+    cursor: pointer;
+}
+
+    .microphone.active {
+        color: red;
+    }
+
+.contentText {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    flex: 1 1 auto;
+    padding: 15px;
+    border: 2px solid #0099CC;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    max-height: calc(100vh - 460px);
+    overflow-y: auto;
+}
+
+.inputContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+    .inputContainer input {
+        width: 70%;
+        margin-right: 10px;
+    }
+
+.demo {
+    font-size: 20px;
+    position: relative;
+}
+
+    .demo::after {
+        position: absolute;
+        content: '';
+        opacity: 0;
+        width: 2px;
+        height: 20px;
+        background: black;
+        margin-left: 5px;
+        animation: blink 1s infinite;
+    }
+
+@keyframes blink {
+    0%, 10% {
+        background: white;
+    }
+
+    50%, 60% {
+        background: black;
+    }
+
+    100% {
+        background: white;
+    }
+}

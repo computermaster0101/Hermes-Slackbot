@@ -4,95 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hermes Web Interface</title>
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <script src="/static/js/formBuilder.js"></script>
-    <script src="/static/js/jsonBuilder.js"></script>
+
+    <link rel="stylesheet" href="/static/css/index.css">
     <script src="/static/js/main.js"></script>
-    <script src="/static/js/rules.js"></script>
-    <script src="/static/js/history.js"></script>
-    <script src="/static/js/socket.js"></script>
-    <style>
-        body {
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        .microphoneContainer {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 400px; /* Height of the invisible square */
-            width: 400px; /* Width of the invisible square */
-            margin: auto; /* Center the container */
-            background: white; /* Set white background */
-            border: 2px solid transparent; /* Invisible border for the square */
-            position: relative; /* Position for the inner circle */
-        }
-
-        .microphoneCircle {
-            height: 160px; /* Circle size */
-            width: 160px; /* Circle size */
-            border: 8px solid #0099CC; /* Microphone color border */
-            border-radius: 50%; /* Make it circular */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute; /* Position it centrally within the container */
-            transition: border-color 0.3s; /* Smooth transition for border color */
-        }
-
-        .microphoneInner {
-            height: 144px; /* Adjusted size to remove white space */
-            width: 144px; /* Adjusted size to remove white space */
-            background: rgba(128, 128, 128, 0.5); /* Gray background for the inner area */
-            border-radius: 50%; /* Keep it circular */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background-color 0.3s; /* Smooth transition for inner color */
-        }
-
-        .microphone {
-            font-size: 80px; /* Increased icon size */
-            color: #0099CC; /* Microphone color */
-            cursor: pointer;
-        }
-
-            .microphone.active {
-                color: red; /* Change color when active */
-            }
-
-        .inputContainer {
-            display: flex;
-            justify-content: center;
-            margin-top: 20px; /* Space between the microphone and the input */
-        }
-
-            .inputContainer input {
-                width: 70%; /* Width of the input box */
-                margin-right: 10px; /* Space between input and button */
-            }
-
-        .tab-pane {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%; /* Fill available space */
-            flex-direction: column; /* Stack elements vertically */
-        }
-    </style>
+    <script src="/static/js/sockets.js"></script>
 </head>
 <body>
     <div class="container mt-5">
         <h2>Hermes Management</h2>
-
-        <!-- Nav tabs for Microphone, Rules, History, and Devices -->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
-                <a class="nav-link active" id="microphone-tab" data-toggle="tab" href="#microphone" role="tab" aria-controls="microphone" aria-selected="true">Microphone</a>
+                <a class="nav-link active" id="input-tab" data-toggle="tab" href="#input" role="tab" aria-controls="input" aria-selected="true">Input</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="rules-tab" data-toggle="tab" href="#rules" role="tab" aria-controls="rules" aria-selected="false">Rules</a>
@@ -103,111 +32,44 @@
             <li class="nav-item">
                 <a class="nav-link" id="devices-tab" data-toggle="tab" href="#devices" role="tab" aria-controls="devices" aria-selected="false">Devices</a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="false">Configuration</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="troubleshooting-tab" data-toggle="tab" href="#troubleshooting" role="tab" aria-controls="troubleshooting" aria-selected="false">Troubleshooting</a>
+            </li>
         </ul>
 
-        <div class="tab-content" id="myTabContent">
-            <!-- Microphone Tab -->
-            <div class="tab-pane fade show active" id="microphone" role="tabpanel" aria-labelledby="microphone-tab">
-                <div class="microphoneContainer mt-3">
-                    <div class="microphoneCircle" id="microphoneCircle">
-                        <div class="microphoneInner" id="microphoneInner">
-                            <i class="fa fa-microphone microphone" id="clickable" onclick="toggle()" accesskey="s"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="inputContainer">
-                    <input type="text" id="userInput" placeholder="Enter a sentence..." />
-                    <button class="btn btn-primary" id="sendButton" onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-
-            <!-- Rules Tab -->
-            <div class="tab-pane fade" id="rules" role="tabpanel" aria-labelledby="rules-tab">
-                <div class="mt-3">
-                    <h3>Rules</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Rule Name</th>
-                                <th>Patterns</th>
-                                <th>Actions</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="rules-table-body">
-                            <!-- Rules will be dynamically inserted here -->
-                        </tbody>
-                    </table>
-                    <button class="btn btn-primary" id="add-rule-btn">Add New Rule</button>
-                </div>
-            </div>
-
-            <!-- History Tab -->
-            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab">
-                <div class="mt-3">
-                    <h3>History</h3>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Event</th>
-                                <th>Message</th>
-                                <th>Details</th>
-                            </tr>
-                        </thead>
-                        <tbody id="history-table-body">
-                            <!-- History entries will be dynamically inserted here -->
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Devices Tab -->
-            <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab">
-                <div class="mt-3">
-                    <h3>Devices</h3>
-                    <p>Manage your connected devices here.</p>
-                    <!-- Add your device management content here -->
-                </div>
-            </div>
-
+        <div class="tab-content" id="tab-content">
+            <div class="tab-pane fade show active" id="input" role="tabpanel" aria-labelledby="input-tab"></div>
+            <div class="tab-pane fade" id="rules" role="tabpanel" aria-labelledby="rules-tab"></div>
+            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab"></div>
+            <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab"></div>
+            <div class="tab-pane fade" id="config" role="tabpanel" aria-labelledby="config-tab"></div>
+            <div class="tab-pane fade" id="troubleshooting" role="tabpanel" aria-labelledby="troubleshooting-tab"></div>
         </div>
     </div>
 
-    <!-- Bootstrap and jQuery JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
     <script>
-        let isActive = false;
+        $(document).ready(function () {
+            loadTabContent("#input", "/static/tabs/input.html");
 
-        function toggle() {
-            const microphoneIcon = document.getElementById("clickable");
-            const microphoneCircle = document.getElementById("microphoneCircle");
-            const microphoneInner = document.getElementById("microphoneInner");
-
-            if (isActive) {
-                microphoneIcon.classList.remove('active'); // Remove active class
-                microphoneCircle.style.borderColor = "#0099CC"; // Reset border color
-                microphoneInner.style.backgroundColor = "rgba(128, 128, 128, 0.5)"; // Reset inner color
-                isActive = false; // Set state to inactive
-            } else {
-                microphoneIcon.classList.add('active'); // Add active class
-                microphoneCircle.style.borderColor = "red"; // Change border color to red
-                microphoneInner.style.backgroundColor = "rgba(255, 182, 193, 0.5)"; // Change inner color to light pink
-                isActive = true; // Set state to active
+            function loadTabContent(tabId, url) {
+                $(tabId).load(url, function (response, status, xhr) {
+                    if (status == "error") {
+                        $(tabId).html("<p>Error loading content: " + xhr.status + " " + xhr.statusText + "</p>");
+                    }
+                });
             }
-        }
 
-        function sendMessage() {
-            const userInput = document.getElementById("userInput").value;
-            if (userInput) {
-                alert("Message sent: " + userInput);
-                document.getElementById("userInput").value = ""; // Clear input field after sending
-            } else {
-                alert("Please enter a sentence.");
-            }
-        }
+            $("#myTab a").on("click", function (e) {
+                e.preventDefault();
+                var tabId = $(this).attr("href");
+                var contentId = tabId.substring(1);
+                loadTabContent("#" + contentId, "/static/tabs/" + contentId + ".html");
+                $(this).tab('show');
+            });
+        });
     </script>
 </body>
 </html>

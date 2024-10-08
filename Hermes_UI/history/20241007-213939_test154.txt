@@ -1,0 +1,7 @@
+{"Device": "test154", "Text": "Hello You! <br><strong> Now Piss Off!</strong>", "Timestamp": "\"timestamp\":\"October 07, 2024 at 09:39PM\"", "channel": null}
+
+Processing message '{"Device": "test154", "Text": "Hello You! <br><strong> Now Piss Off!</strong>", "Timestamp": "\"timestamp\":\"October 07, 2024 at 09:39PM\"", "channel": null}' against rule dictionary
+Message 'Hello You! <br><strong> Now Piss Off!</strong>' matched pattern '.*'
+Rule 'Say' is inactive. Skipping.
+Message 'Hello You! <br><strong> Now Piss Off!</strong>' matched pattern '.*'
+Running action 'powershell.exe -noprofile -executionpolicy bypass -file receivedMessage.ps1' in directory './actions/win10'

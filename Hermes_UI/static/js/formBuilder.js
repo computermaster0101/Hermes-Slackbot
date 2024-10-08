@@ -1,5 +1,3 @@
-// jsonBuilder.js
-
 // Function to get a form from a JSON object
 function getFormFromJSON(object) {
     return buildFormFromObject(object);

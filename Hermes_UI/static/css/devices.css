@@ -1,0 +1,13 @@
+table {
+    width: 100%;
+    margin-top: 20px;
+}
+
+    table th, table td {
+        text-align: center;
+        padding: 10px;
+    }
+
+h3 {
+    margin-bottom: 20px;
+}

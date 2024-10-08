@@ -1,23 +1,28 @@
-// Function to populate the table with rules
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+}
+
 function populateRulesTable(rule_set) {
     const rulesTableBody = $('#rules-table-body');
-    rulesTableBody.empty(); // Clear existing rows
+    rulesTableBody.empty();
 
-    // Iterate over the rules in the provided rule set
     $.each(rule_set.rules, function (fileName, ruleDetails) {
-        // Instead of parsing strings, we directly use the structured ruleDetails object
         const ruleData = {
-            name: ruleDetails.name,
-            patterns: ruleDetails.patterns.join(', '), // Assuming patterns is an array
-            actions: ruleDetails.actions.join(', '), // Assuming actions is an array
+            name: escapeHTML(ruleDetails.name),
+            patterns: escapeHTML(ruleDetails.patterns.join(', ')),
+            actions: escapeHTML(ruleDetails.actions.join(', ')),
             active: ruleDetails.active,
         };
 
-        // Create a row for each rule
         const row = `<tr>
                         <td>${ruleData.name}</td>
-                        <td>${ruleData.patterns}</td>
-                        <td>${ruleData.actions}</td>
+                        <td class="wrap-content">${ruleData.patterns}</td>
+                        <td class="wrap-content">${ruleData.actions}</td>
                         <td>${ruleData.active ? 'Active' : 'Inactive'}</td>
                         <td>
                             <button class="btn btn-success btn-sm edit-rule-btn" data-rule="${fileName}">Edit</button>
@@ -28,14 +33,25 @@ function populateRulesTable(rule_set) {
         rulesTableBody.append(row);
     });
 
-    // Attach click event for edit buttons after the new rows are added
     $('.edit-rule-btn').click(function () {
         const ruleFileName = $(this).data('rule');
         openEditRuleModal(ruleFileName);
     });
 }
 
-// Function to open the edit rule modal
 function openEditRuleModal(fileName) {
-    socket.emit('request_rule', fileName); // Request rule details via WebSocket
+    socket.emit('request_rule', fileName);
+
+    socket.on('receive_rule', function (ruleDetails) {
+        const formHtml = getFormFromJSON(ruleDetails);
+        $('#editRuleModal .modal-body').html(formHtml);
+        $('#editRuleModal').modal('show');
+
+        $('#editRuleModal form').on('submit', function (e) {
+            e.preventDefault();
+            const updatedRule = jsonBuilder($(this).serializeArray());
+            socket.emit('update_rule', { fileName, updatedRule });
+            $('#editRuleModal').modal('hide');
+        });
+    });
 }
