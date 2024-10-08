@@ -1,12 +1,34 @@
+/* working */
+
 table {
     width: 100%;
     margin-top: 20px;
+    border-collapse: collapse; /* Make table borders collapse */
+    border-radius: 10px; /* Add border radius for a softer look */
+    overflow: hidden; /* Prevent border-radius from being clipped */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
 }
 
     table th, table td {
         text-align: center;
-        padding: 10px;
+        padding: 15px; /* Increase padding for better spacing */
         vertical-align: top;
+        border: none; /* Remove default cell borders */
+    }
+
+    table th {
+        background-color: #0099CC; /* Header background color */
+        color: white; /* Header text color */
+        font-weight: bold; /* Bold text for header */
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2; /* Light background for even rows */
+    }
+
+    table tr:hover {
+        background-color: #e0f7fa; /* Highlight color on hover */
+        transition: background-color 0.3s; /* Smooth transition on hover */
     }
 
 td.wrap-content {
@@ -19,7 +41,19 @@ td.wrap-content {
 button#add-rule-btn,
 #selectFolderButton {
     margin-top: 20px;
+    padding: 10px 20px; /* Add padding for better button appearance */
+    border-radius: 10px; /* Match border radius with input */
+    border: none; /* Remove default border */
+    background-color: #0099CC; /* Button color */
+    color: white; /* Text color for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
 }
+
+    button#add-rule-btn:hover,
+    #selectFolderButton:hover {
+        background-color: #007B99; /* Darker shade on hover */
+    }
 
 .button-space, .data-space {
     display: flex;
@@ -39,15 +73,18 @@ ul {
     margin-left: 10px;
     padding: 0;
 }
-    
+
 form {
     display: flex;
     flex-direction: column;
+    width: 80%; /* Set form width */
+    margin: auto; /* Center the form */
 }
 
 .form-group {
     display: flex;
     align-items: center;
+    margin-bottom: 15px; /* Add space between form groups */
 }
 
 .form-control {
@@ -58,6 +95,138 @@ form {
     flex: 1;
     width: 100%;
     box-sizing: border-box;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+    .radio-group label {
+        margin: 0 10px;
+    }
+
+/* Modal Styles */
+.modal-content {
+    border-radius: 10px; /* Match border radius */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+.modal-header {
+    background-color: #0099CC; /* Match the header color */
+    color: white; /* Text color for header */
+    border-top-left-radius: 10px; /* Round corners */
+    border-top-right-radius: 10px; /* Round corners */
+}
+
+.modal-body {
+    padding: 20px; /* Add padding for better spacing */
+}
+
+    .modal-body h5 {
+        margin-bottom: 10px; /* Space below the title */
+        color: #333; /* Text color */
+    }
+
+    .modal-body p {
+        margin: 5px 0; /* Space between paragraphs */
+        color: #555; /* Slightly darker text color */
+    }
+
+.modal-footer {
+    justify-content: flex-end; /* Align buttons to the right */
+}
+
+    .modal-footer button {
+        margin-left: 10px; /* Space between buttons */
+    }
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse; /* Make table borders collapse */
+}
+
+    table th, table td {
+        text-align: center;
+        padding: 10px;
+        vertical-align: top;
+        border: 2px solid #0099CC; /* Add a border to table cells */
+    }
+
+td.wrap-content {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-align: left;
+}
+
+button#add-rule-btn,
+#selectFolderButton {
+    margin-top: 20px;
+    padding: 10px 20px; /* Add padding for better button appearance */
+    border-radius: 10px; /* Match border radius with input */
+    border: none; /* Remove default border */
+    background-color: #0099CC; /* Button color */
+    color: white; /* Text color for button */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+}
+
+    button#add-rule-btn:hover,
+    #selectFolderButton:hover {
+        background-color: #007B99; /* Darker shade on hover */
+    }
+
+.button-space, .data-space {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.column {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+    margin-left: 10px;
+    padding: 0;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 80%; /* Set form width */
+    margin: auto; /* Center the form */
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px; /* Add space between form groups */
+}
+
+.form-control {
+    box-sizing: border-box;
+    border: 2px solid #0099CC; /* Match border color */
+    border-radius: 10px; /* Match border radius */
+    width: 100%; /* Full width of the form control */
+    background-color: #f9f9f9; /* Match background color */
+}
+
+.expand-textarea {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px; /* Add padding for better textarea appearance */
+    border: 2px solid #0099CC; /* Match border color */
+    border-radius: 10px; /* Match border radius */
+    background-color: #f9f9f9; /* Match background color */
 }
 
 .radio-group {

@@ -55,15 +55,16 @@
 .contentText {
     display: flex;
     flex-direction: column;
-    padding-left: 20px;
-    flex: 1 1 auto;
     padding: 15px;
     border: 2px solid #0099CC;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #f9f9f9;
-    max-height: calc(100vh - 460px);
-    overflow-y: auto;
+    margin-top: 20px;
+    width: 75vw; /* Width based on 75% of the viewport width */
+    height: 50vw; /* Height matches width to keep it square */
+    max-height: 50vh; /* Max height based on 50% of the viewport height */
+    overflow-y: auto; /* Allows scrolling if content exceeds height */
 }
 
 .inputContainer {
@@ -75,7 +76,27 @@
     .inputContainer input {
         width: 70%;
         margin-right: 10px;
+        padding: 10px; /* Add padding for better spacing */
+        border: 2px solid #0099CC; /* Match the border color */
+        border-radius: 10px; /* Match the border radius */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        background-color: #f9f9f9; /* Match background color */
+        font-size: 16px; /* Adjust font size */
     }
+
+    .inputContainer button {
+        padding: 10px 20px; /* Add padding for better button appearance */
+        border-radius: 10px; /* Match border radius with input */
+        border: none; /* Remove default border */
+        background-color: #0099CC; /* Button color */
+        color: white; /* Text color for button */
+        cursor: pointer; /* Pointer cursor on hover */
+        transition: background-color 0.3s; /* Smooth transition for hover effect */
+    }
+
+        .inputContainer button:hover {
+            background-color: #007B99; /* Darker shade on hover */
+        }
 
 .demo {
     font-size: 20px;
