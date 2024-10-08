@@ -24,9 +24,8 @@ function populateRulesTable(rule_set) {
                         <td class="wrap-content">${ruleData.patterns}</td>
                         <td class="wrap-content">${ruleData.actions}</td>
                         <td>${ruleData.active ? 'Active' : 'Inactive'}</td>
-                        <td>
+                        <td class="center-button">
                             <button class="btn btn-info btn-sm view-details-btn" data-rule="${fileName}">View Details</button>
-                            <button class="btn btn-warning btn-sm toggle-rule-btn" data-rule="${fileName}">${ruleData.active ? 'Deactivate' : 'Activate'}</button>
                         </td>
                     </tr>`;
         rulesTableBody.append(row);
