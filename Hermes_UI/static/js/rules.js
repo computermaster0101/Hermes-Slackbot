@@ -25,19 +25,20 @@ function populateRulesTable(rule_set) {
                         <td class="wrap-content">${ruleData.actions}</td>
                         <td>${ruleData.active ? 'Active' : 'Inactive'}</td>
                         <td>
-                            <button class="btn btn-success btn-sm edit-rule-btn" data-rule="${fileName}">Edit</button>
-                            <button class="btn btn-danger btn-sm delete-rule-btn" data-rule="${fileName}">Delete</button>
+                            <button class="btn btn-info btn-sm view-details-btn" data-rule="${fileName}">View Details</button>
                             <button class="btn btn-warning btn-sm toggle-rule-btn" data-rule="${fileName}">${ruleData.active ? 'Deactivate' : 'Activate'}</button>
                         </td>
                     </tr>`;
         rulesTableBody.append(row);
     });
 
-    $('.edit-rule-btn').click(function () {
+    $('.view-details-btn').click(function () {
         const ruleFileName = $(this).data('rule');
         openEditRuleModal(ruleFileName);
     });
 }
+
+
 
 function openEditRuleModal(fileName) {
     socket.emit('request_rule', fileName);
