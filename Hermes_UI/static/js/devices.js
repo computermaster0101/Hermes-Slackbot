@@ -24,7 +24,7 @@ function populateDevicesTable(deviceData) {
                                 <td>${escapeHTML(deviceDetails["Last Updated"] || 'N/A')}</td>
                                 <td>${escapeHTML(deviceDetails.Heartbeat || 'N/A')}</td>
                                 <td>
-                                    <button class="btn btn-primary edit-device-btn" onclick="openEditDeviceModal('${escapeHTML(deviceDetails.SYSNAME)}')">Edit</button>
+                                    <button class="btn btn-info btn-sm view-details-btn" onclick="openEditDeviceModal('${escapeHTML(deviceDetails.SYSNAME)}')">View Details</button>
                                 </td>
                             </tr>`;
                 devicesTableBody.append(row);

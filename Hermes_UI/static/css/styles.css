@@ -1,0 +1,306 @@
+/* Global Styles */
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+    table th, table td {
+        text-align: center;
+        padding: 15px;
+        vertical-align: top;
+        border: 2px solid #0099CC;
+    }
+
+    table th {
+        background-color: #0099CC;
+        color: white;
+        font-weight: bold;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:hover {
+        background-color: #e0f7fa;
+        transition: background-color 0.3s;
+    }
+
+/* Content Styles */
+td.wrap-content {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    text-align: left;
+}
+
+.button-space, .data-space {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+    margin: 20px auto;
+}
+
+.column {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+ul {
+    list-style-type: none;
+    margin-left: 10px;
+    padding: 0;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.form-control {
+    box-sizing: border-box;
+    border: 2px solid #0099CC;
+    border-radius: 10px;
+    width: 100%;
+    background-color: #f9f9f9;
+}
+
+.expand-textarea {
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 2px solid #0099CC;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.radio-group {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+    .radio-group label {
+        margin: 0 10px;
+    }
+
+form label {
+    padding: 5px 10px;
+    display: inline-block;
+}
+
+/* Button Styles */
+button#add-rule-btn,
+#selectFolderButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    background-color: #0099CC;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+    button#add-rule-btn:hover,
+    #selectFolderButton:hover {
+        background-color: #007B99;
+    }
+
+/* Modal Styles */
+.modal-lg {
+    max-width: 80%;
+    width: auto;
+}
+
+.modal-content {
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background-color: #0099CC;
+    color: white;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.modal-body {
+    padding: 20px;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+    .modal-body h5 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+
+    .modal-body p {
+        margin: 5px 0;
+        color: #555;
+    }
+
+.modal-footer {
+    justify-content: flex-end;
+}
+
+    .modal-footer button {
+        margin-left: 10px;
+    }
+
+#editRuleModal .modal-body label {
+    text-transform: capitalize;
+}
+
+/* Tab Styles */
+.tab-pane {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Flex Container Styles */
+.flexContainer {
+    display: flex;
+    align-items: center;
+}
+
+/* Microphone Styles */
+.microphoneContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 400px;
+    width: 50%;
+    margin: auto;
+    background: white;
+    border: 2px solid transparent;
+    position: relative;
+}
+
+.microphoneCircle {
+    height: 160px;
+    width: 160px;
+    border: 8px solid #0099CC;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: border-color 0.3s;
+}
+
+.microphoneInner {
+    height: 144px;
+    width: 144px;
+    background: rgba(128, 128, 128, 0.5);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s;
+}
+
+.microphone {
+    font-size: 80px;
+    color: #0099CC;
+    cursor: pointer;
+}
+
+    .microphone.active {
+        color: red;
+    }
+
+/* Content Box Styles */
+.contentText {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    border: 2px solid #0099CC;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+    margin-top: 20px;
+    width: 75vw;
+    height: 50vw;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+
+/* Input Container Styles */
+.inputContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+    .inputContainer input {
+        width: 70%;
+        margin-right: 10px;
+        padding: 10px;
+        border: 2px solid #0099CC;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+        font-size: 16px;
+    }
+
+    .inputContainer button {
+        padding: 10px 20px;
+        border-radius: 10px;
+        border: none;
+        background-color: #0099CC;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .inputContainer button:hover {
+            background-color: #007B99;
+        }
+
+/* Demo Text Styles */
+.demo {
+    font-size: 20px;
+    position: relative;
+}
+
+    .demo::after {
+        position: absolute;
+        content: '';
+        opacity: 0;
+        width: 2px;
+        height: 20px;
+        background: black;
+        margin-left: 5px;
+        animation: blink 1s infinite;
+    }
+
+/* Keyframes for blinking effect */
+@keyframes blink {
+    0%, 10% {
+        background: white;
+    }
+
+    50%, 60% {
+        background: black;
+    }
+
+    100% {
+        background: white;
+    }
+}
