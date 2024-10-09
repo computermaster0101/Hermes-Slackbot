@@ -1,1 +1,0 @@
-%UserProfile%\AppData\Local\Vivaldi\Application\vivaldi.exe
