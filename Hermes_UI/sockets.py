@@ -25,7 +25,7 @@ else:
 DEVICE = os.getenv('SYSNAME', 'missingName')
 RULES_DIR = os.getenv('RULESDIR', './rules/win10')
 HIST_DIR = os.getenv('HISTDIR', './history')
-
+STARTUP = time.strftime('%Y-%m-%d %H:%M:%S')
 # Lock for thread-safe file access
 lock = Lock()
 
@@ -42,22 +42,14 @@ def save_device_info(heartbeat_interval):
         "MSGDIR": os.getenv('MSGDIR', './messages'),
         "RULESDIR": os.getenv('RULESDIR', './rules/win10'),
         "HISTDIR": os.getenv('HISTDIR', './history'),
-        "SLACK_TOKENx": os.getenv('SLACK_TOKENx', ''),
+        "SLACK_TOKEN": os.getenv('SLACK_TOKEN', ''),
         "DEFAULT_SLACK_CHANNEL": os.getenv('DEFAULT_SLACK_CHANNEL', ''),
-        "Last Updated": time.strftime('%Y-%m-%d %H:%M:%S'),  # Update every time
+        "Last Updated": time.strftime('%Y-%m-%d %H:%M:%S'),
+        "Last Startup": STARTUP,
         "Heartbeat": heartbeat_interval
     }
 
-    # If the file exists, don't update Last Startup
-    if os.path.exists(device_file_path):
-        with lock:  # Ensure thread-safe access
-            # Load existing data to keep Last Startup intact
-            with open(device_file_path, 'r') as f:
-                existing_info = json.load(f)
-                device_info["Last Startup"] = existing_info.get("Last Startup", time.strftime('%Y-%m-%d %H:%M:%S'))
-    else:
-        # If file doesn't exist, set Last Startup to the current time
-        device_info["Last Startup"] = time.strftime('%Y-%m-%d %H:%M:%S')
+
 
     # Create directory if it doesn't exist
     os.makedirs(devices_dir, exist_ok=True)
@@ -246,11 +238,12 @@ def init_routes(app, socketio):
         # Update Last Updated timestamp
         device_info["Last Updated"] = time.strftime('%Y-%m-%d %H:%M:%S')
         save_device_info(heartbeat_interval)  # Save updated info
+        
 
     # Schedule heartbeat every 5 minutes
     def heartbeat_scheduler():
         while True:
-            time.sleep(10)  # Change to 300 for 5 minutes
+            time.sleep(30)  # Change to 300 for 5 minutes
             heartbeat()  # Call the heartbeat function
 
     # Start the heartbeat scheduler in a separate thread
