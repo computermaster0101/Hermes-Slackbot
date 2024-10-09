@@ -10,31 +10,42 @@ from rule_set import RuleSet
 from send_message import MessageSender
 
 import os
-import json
 import threading
 import time
+from dotenv import load_dotenv
 
-env = "production"
+env = "dev"
 
 
 class Main:
-    def __init__(self, config_file):
-        self.configFile = os.path.expanduser(config_file)
-        try:
-            config = json.load(open(self.configFile))
-            for item in config:
-                config[item] = os.path.expanduser(config[item])
-            self.systemName = config["sysName"]
-            self.appDirectory = config["appDir"]
-            self.rulesDirectory = config["rulesDir"]
-            self.historyDirectory = config["histDir"]
-            self.msgDir = config["msgDir"]
-            self.messageFile = os.path.join(self.msgDir, f"{self.systemName}.txt")
-            self.keyword = config["keyword"]
+    def __init__(self):
+        # Load environment variables from .env file
+        # Specify the paths for the environment files
+        custom_env_path = os.path.expanduser('~/hermes.env')
+        default_env_path = '.env'
 
-            if config["slack_token"]:
-                self.slack_token = config["slack_token"]
-                self.default_slack_channel = config["default_slack_channel"]
+        # Load the custom .env file if it exists; otherwise, load the default .env
+        if os.path.exists(custom_env_path):
+            load_dotenv(custom_env_path)
+            print(f"Loaded environment variables from {custom_env_path}")
+        else:
+            load_dotenv(default_env_path)
+            print(f"Loaded environment variables from {default_env_path}")
+
+        try:
+            # Initialize class variables from environment variables
+            self.systemName = os.getenv("SYSNAME")
+            self.appDirectory = os.getenv("APPDIR")
+            self.rulesDirectory = os.getenv("RULESDIR")
+            self.historyDirectory = os.getenv("HISTDIR")
+            self.msgDir = os.getenv("MSGDIR")
+            self.messageFile = os.path.join(self.msgDir, f"{self.systemName}.txt")
+            self.keyword = os.getenv("KEYWORD")
+
+            self.slack_token = os.getenv("SLACK_TOKEN")
+            self.default_slack_channel = os.getenv("DEFAULT_SLACK_CHANNEL")
+
+            if self.slack_token:
                 self.message_sender = MessageSender(self.slack_token)
 
             self.audio_listener = AudioListener(keyword=self.keyword)
@@ -45,10 +56,8 @@ class Main:
             self.file_system_thread = threading.Thread(target=self.wait_for_file_system_message)
             self.audio_thread = threading.Thread(target=self.wait_for_audio_message)
 
-        except FileNotFoundError as e:
-            print(f"Error loading config from {self.configFile}: {e}")
         except Exception as e:
-            print(f"Error loading config: {e}")
+            print(f"Error loading configuration: {e}")
 
     def wait_for_user_message(self):
         while True:
@@ -57,16 +66,15 @@ class Main:
                 message = Message(message_text=user_input, message_file=None, device=self.systemName)
                 print(message)
                 self.process_message(message)
-            except EOFError as e:
+            except EOFError:
                 print("\nExiting...\n")
                 os._exit(0)
-            except KeyboardInterrupt as e:
+            except KeyboardInterrupt:
                 print("\nExiting...\n")
                 os._exit(0)
-             
-                
+
     def wait_for_file_system_message(self):
-        print(f"Listen for message file {self.messageFile}")
+        print(f"Listening for message file {self.messageFile}")
         while True:
             if os.path.exists(self.messageFile):
                 message = Message(message_file=self.messageFile, message_text=None)
@@ -74,7 +82,7 @@ class Main:
             time.sleep(0.5)
 
     def wait_for_audio_message(self):
-        print(f"Listen for keyword {self.keyword}")
+        print(f"Listening for keyword {self.keyword}")
         while True:
             audio_input = self.audio_listener.get_message_from_audio()
             if audio_input:
@@ -91,13 +99,12 @@ class Main:
 
         history_file = os.path.join(self.historyDirectory, f"{time.strftime('%Y%m%d-%H%M%S')}_{self.systemName}.txt")
 
-        output_string = ""
-        for line in output:
-            output_string = f'{output_string}\n{line}'
+        output_string = "\n".join(output)
 
         print(output_string)
         with open(history_file, "w") as f:
             f.write(f"{message}\n{output_string}")
+
         if hasattr(self, 'message_sender'):
             if message.channel:
                 self.message_sender.slack(output_string, message.channel)
@@ -113,25 +120,23 @@ class Main:
                 os.rename(self.messageFile, self.messageFile + ".bak")
 
     def run(self):
-        
         try:
-            
-            self.audio_thread.start()
+            # self.audio_thread.start()
             self.file_system_thread.start()
 
-
-            self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
+            if hasattr(self, 'message_sender'):
+                self.message_sender.slack(f'{self.systemName} started listening for messages', self.default_slack_channel)
             print(f'{self.systemName} started listening for messages')
 
             self.user_input_thread.start()
             self.user_input_thread.join()
-            
-            #self.wait_for_user_message()
-            
+
+            self.wait_for_user_message()
+
         except Exception as e:
-            print(f'An unexpected error occured: {e}')
+            print(f'An unexpected error occurred: {e}')
 
 
 if __name__ == "__main__":
-    main = Main("~/hermes.json")
+    main = Main()
     main.run()

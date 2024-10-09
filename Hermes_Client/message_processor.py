@@ -38,7 +38,7 @@ class MessageProcessor:
                                 output.append(f"Rule '{rule.name}' is inactive. Skipping.")
                                 continue
                     except Exception as e:
-                        output.append(f"An error occured while matching patterns for rule '{rule.name}'")
+                        output.append(f"An error occured while matching patterns for rule '{rule.name}'\nError: {e}")
                         print(f"An error occured while matching patterns for rule '{rule.name}'\nError: {e}")
                         pass
             if not match:  # if the pattern/message does not match log it

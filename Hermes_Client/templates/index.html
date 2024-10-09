@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hermes Web Interface</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/main.js"></script>
+    <script src="/static/js/sockets.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2>Hermes Management</h2>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" id="input-tab" data-toggle="tab" href="#input" role="tab" aria-controls="input" aria-selected="true">Input</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="rules-tab" data-toggle="tab" href="#rules" role="tab" aria-controls="rules" aria-selected="false">Rules</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">History</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="devices-tab" data-toggle="tab" href="#devices" role="tab" aria-controls="devices" aria-selected="false">Devices</a>
+            </li>
+            <!-- Hidden Tabs -->
+            <!--
+            <li class="nav-item">
+                <a class="nav-link" id="config-tab" data-toggle="tab" href="#config" role="tab" aria-controls="config" aria-selected="false">Configuration</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="troubleshooting-tab" data-toggle="tab" href="#troubleshooting" role="tab" aria-controls="troubleshooting" aria-selected="false">Troubleshooting</a>
+            </li> -->
+        </ul>
+
+        <div class="tab-content" id="tab-content">
+            <div class="tab-pane fade show active" id="input" role="tabpanel" aria-labelledby="input-tab"></div>
+            <div class="tab-pane fade" id="rules" role="tabpanel" aria-labelledby="rules-tab"></div>
+            <div class="tab-pane fade" id="history" role="tabpanel" aria-labelledby="history-tab"></div>
+            <div class="tab-pane fade" id="devices" role="tabpanel" aria-labelledby="devices-tab"></div>
+            <!-- Hidden Tab Content -->
+            <!-- <div class="tab-pane fade" id="config" role="tabpanel" aria-labelledby="config-tab"></div>
+                <div class="tab-pane fade" id="troubleshooting" role="tabpanel" aria-labelledby="troubleshooting-tab"></div> -->
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            loadTabContent("#input", "/static/tabs/input.html");
+
+            function loadTabContent(tabId, url) {
+                $(tabId).load(url, function (response, status, xhr) {
+                    if (status == "error") {
+                        $(tabId).html("<p>Error loading content: " + xhr.status + " " + xhr.statusText + "</p>");
+                    }
+                });
+            }
+
+            $("#myTab a").on("click", function (e) {
+                e.preventDefault();
+                var tabId = $(this).attr("href");
+                var contentId = tabId.substring(1);
+                loadTabContent("#" + contentId, "/static/tabs/" + contentId + ".html");
+                $(this).tab('show');
+            });
+        });
+    </script>
+</body>
+</html>
