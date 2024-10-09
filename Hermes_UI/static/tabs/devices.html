@@ -17,7 +17,7 @@
 
 <!-- Device Modal -->
 <div class="modal fade" id="editDeviceModal" tabindex="-1" role="dialog" aria-labelledby="editDeviceModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="editDeviceModalLabel">Edit Device</h5>
@@ -30,7 +30,6 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="saveDeviceBtn">Save changes</button>
             </div>
         </div>
     </div>
@@ -39,4 +38,3 @@
 <script src="/static/js/formBuilder.js"></script>
 <script src="/static/js/jsonBuilder.js"></script>
 <script src="/static/js/devices.js"></script>
-<script>socket.emit('get_devices');</script>

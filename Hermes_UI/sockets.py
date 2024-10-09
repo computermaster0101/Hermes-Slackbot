@@ -88,6 +88,7 @@ def init_routes(app, socketio):
     @socketio.on('send_message')
     def send_message(message):
         try:
+            get_rule_set()
             message_instance = Message(
                 message_text=message.get('text'),
                 message_file=None,
@@ -206,6 +207,23 @@ def init_routes(app, socketio):
             return content, 200
         except Exception:
             return jsonify({"error": "File not found or cannot be read"}), 404
+        
+    @app.route('/devices/<filename>', methods=['GET'])
+    def get_device_details(filename):
+        devices_dir = './devices'
+        device_file_path = os.path.join(devices_dir, f"{filename}.json")
+        try:
+            with open(device_file_path, 'r') as f:
+                device_info = json.load(f)
+                print(device_info)
+                return jsonify(device_info), 200
+        except FileNotFoundError:
+            return jsonify({'error': 'Device not found'}), 404
+        except json.JSONDecodeError:
+            return jsonify({'error': 'Error reading device data'}), 500
+        except Exception as e:
+            return jsonify({'error': str(e)}), 500
+
 
     @socketio.on('heartbeat')
     def update_heartbeat():

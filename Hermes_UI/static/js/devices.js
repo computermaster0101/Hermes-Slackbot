@@ -1,3 +1,6 @@
+// Existing code in devices.js
+socket.emit('get_devices');
+
 function escapeHTML(str) {
     return String(str)
         .replace(/&/g, '&amp;')
@@ -24,7 +27,7 @@ function populateDevicesTable(deviceData) {
                                 <td>${escapeHTML(deviceDetails["Last Updated"] || 'N/A')}</td>
                                 <td>${escapeHTML(deviceDetails.Heartbeat || 'N/A')}</td>
                                 <td>
-                                    <button class="btn btn-info btn-sm view-details-btn" onclick="openEditDeviceModal('${escapeHTML(deviceDetails.SYSNAME)}')">View Details</button>
+                                    <button class="btn btn-info btn-sm view-details-btn" onclick="fetchDeviceDetails('${escapeHTML(deviceDetails.SYSNAME)}')">View Details</button>
                                 </td>
                             </tr>`;
                 devicesTableBody.append(row);
@@ -39,35 +42,40 @@ function populateDevicesTable(deviceData) {
     }
 }
 
+function fetchDeviceDetails(deviceName) {
+    $.get(`/devices/${deviceName}`, function (data) {
+        // Assuming `data` contains device details, we will use formBuilder to create a form
+        const formHtml = getFormFromJSON(data); // Create the form from the device details
+        $('#editDeviceModal .modal-body').html(formHtml); // Insert the form into the modal
+        $('#editDeviceModal').modal('show'); // Show the modal
 
-function openEditDeviceModal(deviceName) {
-    if (deviceName) {
-        // Fetch existing device details to edit
-        socket.emit('request_device', deviceName);
-        socket.on('receive_device', function (deviceDetails) {
-            const formHtml = getFormFromJSON(deviceDetails);
-            $('#editDeviceModal .modal-body').html(formHtml);
-            $('#editDeviceModal').modal('show');
-
-            $('#saveDeviceBtn').off('click').on('click', function () {
-                const updatedDevice = jsonBuilder($('#editDeviceModal .modal-body form').serializeArray());
-                socket.emit('update_device', { deviceName, updatedDevice });
-                $('#editDeviceModal').modal('hide');
+        // Attach form submit event
+        $('#editDeviceModal form').on('submit', function (e) {
+            e.preventDefault();
+            const updatedDevice = jsonBuilder($(this).serializeArray()); // Convert the form to JSON
+            $.ajax({
+                url: `/devices/${deviceName}`,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(updatedDevice),
+                success: function (response) {
+                    $('#editDeviceModal').modal('hide');
+                    // Optionally, refresh the table or show a success message
+                },
+                error: function () {
+                    console.error('Error saving device details.');
+                    // Handle error case
+                }
             });
         });
-    } else {
-        // Prepare the modal for adding a new device
-        $('#editDeviceModal .modal-body').html(getEmptyForm());
+    }).fail(function () {
+        console.error('Error fetching device details');
+        $('#details-content').text('Error fetching device details.');
         $('#editDeviceModal').modal('show');
-
-        $('#saveDeviceBtn').off('click').on('click', function () {
-            const newDevice = jsonBuilder($('#editDeviceModal .modal-body form').serializeArray());
-            socket.emit('add_device', newDevice);
-            $('#editDeviceModal').modal('hide');
-        });
-    }
+    });
 }
 
+// Existing event listener for updated devices
 socket.on('updated_devices', (devices) => {
     populateDevicesTable(devices);
 });
