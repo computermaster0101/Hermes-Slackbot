@@ -9,7 +9,18 @@ from sockets import init_routes
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-load_dotenv()
+# Specify the paths for the environment files
+custom_env_path = os.path.expanduser('~/hermes.env')
+default_env_path = '.env'
+
+# Load the custom .env file if it exists; otherwise, load the default .env
+if os.path.exists(custom_env_path):
+    load_dotenv(custom_env_path)
+    print(f"Loaded environment variables from {custom_env_path}")
+else:
+    load_dotenv(default_env_path)
+    print(f"Loaded environment variables from {default_env_path}")
+
 HOST = os.getenv('HOST', 'localhost')
 PORT = os.getenv('PORT', 5000)
 SECRET_KEY = os.getenv('SECRET_KEY', 'your_default_secret_key')

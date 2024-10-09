@@ -10,7 +10,18 @@ from flask import render_template, jsonify
 from flask_socketio import emit
 from threading import Lock
 
-load_dotenv()
+# Specify the paths for the environment files
+custom_env_path = os.path.expanduser('~/hermes.env')
+default_env_path = '.env'
+
+# Load the custom .env file if it exists; otherwise, load the default .env
+if os.path.exists(custom_env_path):
+    load_dotenv(custom_env_path)
+    print(f"Loaded environment variables from {custom_env_path}")
+else:
+    load_dotenv(default_env_path)
+    print(f"Loaded environment variables from {default_env_path}")
+
 DEVICE = os.getenv('SYSNAME', 'missingName')
 RULES_DIR = os.getenv('RULESDIR', './rules/win10')
 HIST_DIR = os.getenv('HISTDIR', './history')

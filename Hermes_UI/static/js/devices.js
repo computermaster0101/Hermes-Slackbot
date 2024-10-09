@@ -47,6 +47,10 @@ function fetchDeviceDetails(deviceName) {
         // Assuming `data` contains device details, we will use formBuilder to create a form
         const formHtml = getFormFromJSON(data); // Create the form from the device details
         $('#editDeviceModal .modal-body').html(formHtml); // Insert the form into the modal
+
+        // Lock all inputs by adding the readonly attribute
+        $('#editDeviceModal .modal-body input').attr('readonly', true);
+
         $('#editDeviceModal').modal('show'); // Show the modal
 
         // Attach form submit event
@@ -74,6 +78,7 @@ function fetchDeviceDetails(deviceName) {
         $('#editDeviceModal').modal('show');
     });
 }
+
 
 // Existing event listener for updated devices
 socket.on('updated_devices', (devices) => {

@@ -20,7 +20,17 @@ env = "dev"
 class Main:
     def __init__(self):
         # Load environment variables from .env file
-        load_dotenv()
+        # Specify the paths for the environment files
+        custom_env_path = os.path.expanduser('~/hermes.env')
+        default_env_path = '.env'
+
+        # Load the custom .env file if it exists; otherwise, load the default .env
+        if os.path.exists(custom_env_path):
+            load_dotenv(custom_env_path)
+            print(f"Loaded environment variables from {custom_env_path}")
+        else:
+            load_dotenv(default_env_path)
+            print(f"Loaded environment variables from {default_env_path}")
 
         try:
             # Initialize class variables from environment variables

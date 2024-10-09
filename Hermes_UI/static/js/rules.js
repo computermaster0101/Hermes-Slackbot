@@ -43,13 +43,21 @@ function openEditRuleModal(fileName) {
     socket.emit('request_rule', fileName);
 
     socket.on('receive_rule', function (ruleDetails) {
-        const formHtml = getFormFromJSON(ruleDetails);
-        $('#editRuleModal .modal-body').html(formHtml);
-        $('#editRuleModal').modal('show');
+        const formHtml = getFormFromJSON(ruleDetails); // Create the form using formBuilder
+        $('#editRuleModal .modal-body').html(formHtml); // Insert the form into the modal
 
+        // Lock all inputs by adding the readonly attribute
+        $('#editRuleModal .modal-body input').attr('readonly', true);
+
+        // Lock all dropdowns by adding the disabled attribute
+        $('#editRuleModal .modal-body select').attr('disabled', true);
+
+        $('#editRuleModal').modal('show'); // Show the modal
+
+        // Attach form submit event
         $('#editRuleModal form').on('submit', function (e) {
             e.preventDefault();
-            const updatedRule = jsonBuilder($(this).serializeArray());
+            const updatedRule = jsonBuilder($(this).serializeArray()); // Convert the form to JSON
             socket.emit('update_rule', { fileName, updatedRule });
             $('#editRuleModal').modal('hide');
         });
