@@ -1,18 +1,84 @@
 import os
 import json
 import time
+import threading
 from rule_set import RuleSet
 from message_processor import MessageProcessor
 from message import Message
 from dotenv import load_dotenv
 from flask import render_template, jsonify
+from flask_socketio import emit
+from threading import Lock
 
 load_dotenv()
 DEVICE = os.getenv('SYSNAME', 'missingName')
 RULES_DIR = os.getenv('RULESDIR', './rules/win10')
 HIST_DIR = os.getenv('HISTDIR', './history')
+
+# Lock for thread-safe file access
+lock = Lock()
+
+# Function to save device info to JSON
+def save_device_info(heartbeat_interval):
+    devices_dir = './devices'
+    device_file_path = os.path.join(devices_dir, f"{DEVICE}.json")
+
+    # Initialize device_info with default values
+    device_info = {
+        "SYSNAME": DEVICE,
+        "KEYWORD": os.getenv('KEYWORD', ''),
+        "APPDIR": os.getenv('APPDIR', './'),
+        "MSGDIR": os.getenv('MSGDIR', './messages'),
+        "RULESDIR": os.getenv('RULESDIR', './rules/win10'),
+        "HISTDIR": os.getenv('HISTDIR', './history'),
+        "SLACK_TOKENx": os.getenv('SLACK_TOKENx', ''),
+        "DEFAULT_SLACK_CHANNEL": os.getenv('DEFAULT_SLACK_CHANNEL', ''),
+        "Last Updated": time.strftime('%Y-%m-%d %H:%M:%S'),  # Update every time
+        "Heartbeat": heartbeat_interval
+    }
+
+    # If the file exists, don't update Last Startup
+    if os.path.exists(device_file_path):
+        with lock:  # Ensure thread-safe access
+            # Load existing data to keep Last Startup intact
+            with open(device_file_path, 'r') as f:
+                existing_info = json.load(f)
+                device_info["Last Startup"] = existing_info.get("Last Startup", time.strftime('%Y-%m-%d %H:%M:%S'))
+    else:
+        # If file doesn't exist, set Last Startup to the current time
+        device_info["Last Startup"] = time.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Create directory if it doesn't exist
+    os.makedirs(devices_dir, exist_ok=True)
+
+    # Write the device info to the JSON file
+    with lock:  # Ensure thread-safe access
+        with open(device_file_path, 'w') as f:
+            json.dump(device_info, f, indent=4)
+
+# Check for existing device file at startup
+def load_device_info():
+    device_file_path = os.path.join('./devices', f"{DEVICE}.json")
+    
+    if os.path.exists(device_file_path):
+        with open(device_file_path, 'r') as f:
+            return json.load(f)
+    else:
+        # If file doesn't exist, create one with heartbeat interval
+        heartbeat_interval = 300  # Default to 5 minutes (300 seconds)
+        save_device_info(heartbeat_interval)
+        return {
+            "Heartbeat": heartbeat_interval,
+            "Last Startup": time.strftime('%Y-%m-%d %H:%M:%S'),
+            "Last Updated": time.strftime('%Y-%m-%d %H:%M:%S')
+        }  # Return a new dictionary with initial values
+
+# Initialize rules and message processor
 rules = RuleSet(RULES_DIR)
 message_processor = MessageProcessor(rules)
+
+# Load device info at startup
+device_info = load_device_info()
 
 def init_routes(app, socketio):
     @app.route('/')
@@ -79,6 +145,25 @@ def init_routes(app, socketio):
             }
             socketio.emit('receive_rule', rule_details)
 
+    @socketio.on('get_devices')
+    def get_devices():
+        devices_data = []
+        devices_dir = './devices'
+        
+        try:
+            for filename in os.listdir(devices_dir):
+                if filename.endswith('.json'):
+                    file_path = os.path.join(devices_dir, filename)
+                    with open(file_path, 'r') as f:
+                        device_info = json.load(f)
+                        devices_data.append({
+                            'filename': filename,
+                            'device_info': device_info
+                        })
+            socketio.emit('updated_devices', devices_data)
+        except Exception as e:
+            socketio.emit('updated_devices', {'error': str(e)})
+
     @socketio.on('get_history')
     def get_history():
         history_data = []
@@ -121,3 +206,23 @@ def init_routes(app, socketio):
             return content, 200
         except Exception:
             return jsonify({"error": "File not found or cannot be read"}), 404
+
+    @socketio.on('heartbeat')
+    def update_heartbeat():
+        return heartbeat()
+
+    def heartbeat():
+        global device_info  # Ensure we're working with the global variable
+        heartbeat_interval = device_info.get("Heartbeat", 300)  # Default to 300 seconds
+        # Update Last Updated timestamp
+        device_info["Last Updated"] = time.strftime('%Y-%m-%d %H:%M:%S')
+        save_device_info(heartbeat_interval)  # Save updated info
+
+    # Schedule heartbeat every 5 minutes
+    def heartbeat_scheduler():
+        while True:
+            time.sleep(10)  # Change to 300 for 5 minutes
+            heartbeat()  # Call the heartbeat function
+
+    # Start the heartbeat scheduler in a separate thread
+    threading.Thread(target=heartbeat_scheduler, daemon=True).start()

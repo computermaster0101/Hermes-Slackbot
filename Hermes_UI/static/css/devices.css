@@ -1,13 +1,55 @@
-table {
-    width: 100%;
-    margin-top: 20px;
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
 }
 
-    table th, table td {
-        text-align: center;
-        padding: 10px;
+/* Table Styles */
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .table th, .table td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #dee2e6;
     }
 
-h3 {
+    .table th {
+        background-color: #f8f9fa;
+    }
+
+/* Button Styles */
+.button-space {
     margin-bottom: 20px;
+}
+
+.btn {
+    margin-right: 10px; /* Space between buttons */
+}
+
+/* Modal Styles */
+.modal-header {
+    background-color: #007bff; /* Bootstrap primary color */
+    color: white;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    background-color: #f1f1f1; /* Light grey footer */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .table th, .table td {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .modal-header {
+        font-size: 18px;
+    }
 }
