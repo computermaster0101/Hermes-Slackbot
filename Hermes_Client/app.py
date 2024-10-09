@@ -32,7 +32,7 @@ socketio = SocketIO(app)
 init_routes(app, socketio)
 
 def run_main():
-    process = subprocess.Popen(['python', 'main.py'])
+    process = subprocess.Popen(['python3', 'main.py'])
     process.wait()
     os._exit(0)
 

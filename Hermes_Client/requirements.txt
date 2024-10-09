@@ -1,3 +1,5 @@
 Flask==2.2.2
 Flask-SocketIO==5.3.3
 eventlet==0.33.3  # Needed for async support (optional, but recommended for production)
+watchdog
+SpeechRecognition
