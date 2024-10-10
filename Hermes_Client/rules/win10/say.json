@@ -5,7 +5,7 @@
     ".*"
   ],
   "actions": [
-    "python.exe say.py"
+    "python3.12.exe say.py"
   ],
   "runningDirectory": "./actions/win10",
   "passMessage": true,

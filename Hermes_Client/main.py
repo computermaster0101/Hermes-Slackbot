@@ -14,7 +14,7 @@ import threading
 import time
 from dotenv import load_dotenv
 
-env = "dev"
+env = "production"
 
 
 class Main:

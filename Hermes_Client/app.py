@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import subprocess
 import threading
@@ -32,9 +33,16 @@ socketio = SocketIO(app)
 init_routes(app, socketio)
 
 def run_main():
-    process = subprocess.Popen(['python3', 'main.py'])
+    if sys.platform == "win32":
+        python_executable = 'python3.12.exe'
+    else:
+        python_executable = 'python3.12'
+
+
+    process = subprocess.Popen([python_executable, 'main.py'])
     process.wait()
     os._exit(0)
+
 
 if __name__ == '__main__':
     main_thread = threading.Thread(target=run_main)
