@@ -6,9 +6,9 @@
     "reset"
   ],
   "actions": [
-    "powershell.exe -noprofile -executionpolicy bypass -file restart.ps1"
+    "python.exe restart.py"
   ],
-  "runningDirectory": "~\\Documents\\GitHub\\Hermes\\actions\\win10",
+  "runningDirectory": ".\\actions\\win10",
   "passMessage": false,
   "active": true
 }

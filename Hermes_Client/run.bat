@@ -1,1 +1,2 @@
-python.exe main.py
+set PYTHONDONTWRITEBYTECODE=1
+python.exe app.py

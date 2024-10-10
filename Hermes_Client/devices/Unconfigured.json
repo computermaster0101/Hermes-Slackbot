@@ -1,0 +1,13 @@
+{
+    "SYSNAME": "Unconfigured",
+    "KEYWORD": "unconfigured",
+    "APPDIR": ".\\\\",
+    "MSGDIR": ".\\\\messages",
+    "RULESDIR": ".\\\\rules\\\\win10",
+    "HISTDIR": ".\\\\history",
+    "SLACK_TOKEN": "",
+    "DEFAULT_SLACK_CHANNEL": "",
+    "Last Updated": "2024-10-09 18:39:01",
+    "Last Startup": "2024-10-09 18:39:01",
+    "Heartbeat": 300
+}
